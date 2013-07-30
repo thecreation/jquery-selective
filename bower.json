@@ -1,0 +1,16 @@
+{
+  "name": "jquery-selective",
+  "version": "0.1.0",
+  "main": "dist/jquery-selective.js",
+  "dependencies": {
+    "jquery": "~2.0.3"
+  },
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "components",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
