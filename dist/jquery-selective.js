@@ -1,4 +1,4 @@
-/*! jQuery Selective - v0.1.0 - 2013-07-30
+/*! jQuery Selective - v0.1.0 - 2013-07-31
 * https://github.com/amazingSurge/jquery-selective
 * Copyright (c) 2013 amazingSurge; Licensed GPL */
 (function(window, document, $, undefined) {
