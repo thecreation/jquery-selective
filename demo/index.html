@@ -11,10 +11,29 @@
     <meta name="viewport" content="width=device-width">
     <!--[if lte IE 8]> <script type="text/javascript" src="js/jquery-1.x.min.js"></script> <![endif]-->
     <!--[if gt IE 8]><!--> <script type="text/javascript" src="js/jquery-2.x.min.js"></script> <!--<![endif]-->
-    <link rel="stylesheet" href="../dist/jquery-selected.min.js">
+    
+    <link rel="stylesheet" type="text/css" href="css/prelude-min.css">
+<!--     <link rel="stylesheet" type="text/css" href="css/avatar.css">
+    <link rel="stylesheet" type="text/css" href="css/formSearch.css">
+    <link rel="stylesheet" type="text/css" href="css/vcard.css"> -->
+    <link rel="stylesheet" type="text/css" href="css/selective.css">
+
 </head>
 <body>
 
+<select id="selective-example">
+    <option value ="volvo" selected>Volvo</option>
+    <option value ="saab">Saab</option>
+    <option value="opel">Opel</option>
+    <option value="audi">Audi</option>
+</select>
 
+<script src="../src/jquery-selective.js"></script>
+<script>
+$(document).ready(function() {
+    $('#selective-example').selective();
+});
+
+</script>  
 </body>
 </html>

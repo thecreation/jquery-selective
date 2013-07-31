@@ -1,0 +1,34 @@
+.vcard {
+  display: block;
+}
+.vcard > img {
+  vertical-align: middle;
+}
+.vcard-info {
+  display: inline-block;
+  margin-left: 20px;
+  vertical-align: middle;
+}
+.vcard-info h1,
+.vcard-info h2,
+.vcard-info h3,
+.vcard-info h4,
+.vcard-info h5,
+.vcard-info h6 {
+  margin-top: 0;
+  margin-bottom: 0;
+  font-weight: normal;
+}
+.vcard-info h1 {
+  font-size: 36px;
+  line-height: 36px;
+}
+.vcard-info-profession {
+  font-size: 14px;
+  margin-bottom: 0;
+}
+.vcard-info-lastActive {
+  font-size: 14px;
+  margin-bottom: 0;
+  color: #aaaaaa;
+}

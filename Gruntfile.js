@@ -91,7 +91,15 @@ module.exports = function(grunt) {
         wrap_line_length: 150,
         unescape_strings: false
       }
-    }
+    },
+    less: {
+      selective: {
+        files: [{
+          src: 'demo/less/selective.less',
+          dest: 'demo/css/selective.css'
+        }]
+      }
+    },
   });
 
   // These plugins provide necessary tasks.
@@ -102,11 +110,16 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-text-replace');
   grunt.loadNpmTasks('grunt-jsbeautifier');
+  grunt.loadNpmTasks('grunt-contrib-less');
 
   // Default task.
   grunt.registerTask('default', ['jshint', 'jsbeautifier', 'clean', 'concat', 'uglify']);
 
   grunt.registerTask('js', ['jsbeautifier']);
+
+  grunt.registerTask('tocss', [
+    'less:selective'
+  ]);
 
   grunt.registerTask('version', [
     'replace:bower',

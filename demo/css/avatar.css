@@ -1,0 +1,281 @@
+.avatarMini {
+  width: 24px;
+  height: 24px;
+  border: 3px solid #ffffff;
+  -webkit-box-shadow: 0 3px 2px 0 rgba(89,89,89,.08);
+  -moz-box-shadow: 0 3px 2px 0 rgba(89,89,89,.08);
+  box-shadow: 0 3px 2px 0 rgba(89,89,89,.08);
+  -webkit-border-radius: 1000px;
+  -moz-border-radius: 1000px;
+  border-radius: 1000px;
+}
+.avatarSmall {
+  width: 34px;
+  height: 34px;
+  border: 3px solid #ffffff;
+  -webkit-box-shadow: 0 3px 2px 0 rgba(89,89,89,.08);
+  -moz-box-shadow: 0 3px 2px 0 rgba(89,89,89,.08);
+  box-shadow: 0 3px 2px 0 rgba(89,89,89,.08);
+  -webkit-border-radius: 1000px;
+  -moz-border-radius: 1000px;
+  border-radius: 1000px;
+}
+.avatarSmall + .avatarRemove {
+  width: 25px;
+  height: 25px;
+  line-height: 25px;
+  top: 0;
+  right: -4px;
+}
+.avatar {
+  width: 51px;
+  height: 51px;
+  border: 3px solid #ffffff;
+  -webkit-box-shadow: 0 3px 2px 0 rgba(89,89,89,.08);
+  -moz-box-shadow: 0 3px 2px 0 rgba(89,89,89,.08);
+  box-shadow: 0 3px 2px 0 rgba(89,89,89,.08);
+  -webkit-border-radius: 1000px;
+  -moz-border-radius: 1000px;
+  border-radius: 1000px;
+}
+.avatarLarge {
+  width: 88px;
+  height: 88px;
+  border: 3px solid #ffffff;
+  -webkit-box-shadow: 0 3px 2px 0 rgba(89,89,89,.08);
+  -moz-box-shadow: 0 3px 2px 0 rgba(89,89,89,.08);
+  box-shadow: 0 3px 2px 0 rgba(89,89,89,.08);
+  -webkit-border-radius: 1000px;
+  -moz-border-radius: 1000px;
+  border-radius: 1000px;
+}
+.avatarMini.no-border,
+.avatarSmall.no-border,
+.avatar.no-border,
+.avatarLarge.no-border {
+  border: none;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+.avatarMini.no-border + .avatarCover-show,
+.avatarSmall.no-border + .avatarCover-show,
+.avatar.no-border + .avatarCover-show,
+.avatarLarge.no-border + .avatarCover-show {
+  top: 0;
+  left: 0;
+}
+.avatarMini.has-solid-border,
+.avatarSmall.has-solid-border,
+.avatar.has-solid-border,
+.avatarLarge.has-solid-border {
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+.avatarMini.has-solid-border + .avatarCover-show,
+.avatarSmall.has-solid-border + .avatarCover-show,
+.avatar.has-solid-border + .avatarCover-show,
+.avatarLarge.has-solid-border + .avatarCover-show {
+  top: 1px;
+  left: 1px;
+}
+.avatarMini + .avatarCover-show,
+.avatarSmall + .avatarCover-show,
+.avatar + .avatarCover-show,
+.avatarLarge + .avatarCover-show {
+  top: 3px;
+  left: 3px;
+}
+.avatarMini:hover,
+.avatarSmall:hover,
+.avatar:hover,
+.avatarLarge:hover {
+  -webkit-box-shadow: 0 3px 2px 0 rgba(89,89,89,.3);
+  -moz-box-shadow: 0 3px 2px 0 rgba(89,89,89,.3);
+  box-shadow: 0 3px 2px 0 rgba(89,89,89,.3);
+}
+[class*=avatarRemove] {
+  display: inline-block;
+  position: absolute;
+  font-size: 10px;
+  color: white;
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+}
+.avatarRemoveLarge {
+  width: 25px;
+  height: 25px;
+  line-height: 25px;
+  top: 0;
+  right: -4px;
+  background-image: url("../img/icon-avatarRemove-large.png");
+}
+.avatarRemoveLarge:hover {
+  background-image: url("../img/icon-avatarRemove-large-hover.png");
+}
+.avatarRemoveSmall {
+  display: none;
+  height: 15px;
+  line-height: 15px;
+  right: 0;
+  top: -2px;
+  width: 15px;
+  background-image: url("../img/icon-avatarRemove-small.png");
+}
+.avatarRemoveSmall:hover {
+  background-image: url("../img/icon-avatarRemove-small-hover.png");
+}
+.avatarDelete {
+  display: inline-block;
+  position: absolute;
+  font-size: 10px;
+  color: white;
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+  width: 25px;
+  height: 25px;
+  line-height: 25px;
+  top: 0;
+  right: -4px;
+  background-image: url("../img/icon-avatarDelete.png");
+}
+.avatarDelete:hover {
+  background-image: url("../img/icon-avatarDelete-hover.png");
+}
+.avatarAdministrator {
+  display: inline-block;
+  position: absolute;
+  font-size: 10px;
+  color: white;
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+  width: 35px;
+  height: 35px;
+  line-height: 35px;
+  bottom: 0;
+  left: -4px;
+  background-image: url("../img/icon-avatarAdministrator.png");
+  background-repeat: no-repeat;
+}
+.avatarAdministrator.is-active {
+  background-image: url("../img/icon-avatarAdministrator-active.png");
+  background-position: -1.6px 0;
+}
+.avatarAdminSystem {
+  display: inline-block;
+  position: absolute;
+  font-size: 10px;
+  color: white;
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+  width: 35px;
+  height: 35px;
+  line-height: 35px;
+  bottom: 0;
+  left: -4px;
+  background-image: url("../img/icon-avatarAdministrator.png");
+  background-repeat: no-repeat;
+}
+.avatarAdminSystem.is-active {
+  background-image: url("../img/icon-avatarAdministratorSystem.png");
+  background-position: 0.8px 2px;
+}
+.avatarCreater {
+  display: inline-block;
+  position: absolute;
+  font-size: 10px;
+  color: white;
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+  width: 35px;
+  height: 35px;
+  line-height: 35px;
+  bottom: 0;
+  left: -4px;
+  background-image: url("../img/icon-avatarCreater.png");
+  background-repeat: no-repeat;
+}
+a.avatarCover {
+  text-decoration: none;
+}
+.avatarCover {
+  display: inline-block;
+  *display: inline;
+  /* IE7 inline-block hack */
+
+  *zoom: 1;
+  position: relative;
+  cursor: pointer;
+}
+.avatarCover:hover .avatarCover-show {
+  display: block;
+}
+.avatarCover .avatarCover-show {
+  display: none;
+  -webkit-border-radius: 1000px;
+  -moz-border-radius: 1000px;
+  border-radius: 1000px;
+  text-align: center;
+  font-weight: bold;
+  color: #fafafa;
+  background-color: #dadada;
+  position: absolute;
+}
+.avatarCover .avatarMini + .avatarCover-show {
+  width: 24px;
+  height: 24px;
+  line-height: 24px;
+  font-size: 3px;
+}
+.avatarCover .avatarSmall + .avatarCover-show {
+  width: 34px;
+  height: 34px;
+  line-height: 34px;
+  font-size: 5px;
+}
+.avatarCover .avatar + .avatarCover-show {
+  width: 51px;
+  height: 51px;
+  line-height: 51px;
+  font-size: 8px;
+}
+.avatarCover .avatarLarge + .avatarCover-show {
+  width: 88px;
+  height: 88px;
+  line-height: 88px;
+  font-size: 14px;
+}
+.avatarContainer {
+  display: inline-block;
+  position: relative;
+}
+.avatarContainer > a {
+  display: inline-block;
+}
+.avatarContainer:hover .avatarRemoveSmall {
+  display: block;
+}
+.avatarCounter {
+  display: inline-block;
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  line-height: 14px;
+  background-image: url("../img/img-counter.png");
+  font-size: 10px;
+  color: white;
+  text-decoration: none;
+  text-align: center;
+}
+.avatarSmall + .avatarCounter {
+  top: 0;
+  right: 0;
+}
+.avatarMini + .avatarCounter {
+  top: -4px;
+  right: -6px;
+}

@@ -1,0 +1,44 @@
+.formSearch {
+  position: relative;
+  font-size: 0;
+  letter-spacing: -4px;
+  line-height: 0;
+  display: inline-block;
+  *display: inline;
+  /* IE7 inline-block hack */
+
+  *zoom: 1;
+}
+.formSearch input[type="text"] {
+  width: 200px;
+  height: 25px;
+  padding-right: 30px;
+  font-family: inherit;
+  font-size: 14px;
+  color: #a0a0a0;
+  border: 1px solid #ced0d3;
+  border-radius: 3px;
+}
+.formSearch button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 30px;
+  height: 28px;
+  font: 0/0 a;
+  text-shadow: none;
+  color: transparent;
+  background-color: transparent;
+  border: none;
+  background-image: url("../img/icon-magnifier.png");
+  background-repeat: no-repeat;
+  background-position: 6px 5px;
+}
+/*.formSearch button:hover {
+  text-shadow: none;
+  color: transparent;
+  background-color: transparent;
+  background-image: url("../images/ucenterIcons.png");
+  background-repeat: no-repeat;
+  border: none;
+}*/

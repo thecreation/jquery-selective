@@ -7,17 +7,93 @@
   // Constructor
   var Selective = $.Selective = function(element, options) {
     this.el = element;
-    this.$el = $(element);
+    this.$el = $(element).css({
+      display: 'none'
+    }) || $('<div></div>');
 
     this.options = $.extend(true, {}, Selective.defaults, options);
+    this.$options = this.$el.find('option');
+    // this.$optgroups = this.$el.find('optgroup');
+
+    this.namespace = this.options.namespace;
+
+    // flag
+    this.opened = false;
+
+    this.init();
   };
 
   Selective.defaults = {
+    namespace: 'selective',
+    multiple: false,
+    withSearch: true,
+    insertLocation: 'before', // before | after
+    tpl: {
+      item: function(content) {
+        return '<li>' + content + '</li>';
+      },
+      listItem: function(content) {
+        return '<li>' + content + '</li>';
+      },
+      trigger: function() {
+        return '<button>Add</button>';
+      },
+      search: function() {
+        return '<input type="text" placeholder="Search...">';
+      }
+    }
 
   };
 
   Selective.prototype = {
+    constructor: Selective,
+    init: function() {
+      var frame = '<div class="' + this.namespace + '">' +
+        '<ul class="' + this.namespace + '-items"></ul>' +
+        '<div class="' + this.namespace + '-tragger">' +
+        this.options.tpl.trigger() +
+        '</div>' +
+        '<div class="' + this.namespace + '-dropdown">' +
+        '<ul class="' + this.namespace + '-list"></ul>' +
+        '</div>' +
+        '</div>';
 
+      this.$select = $(frame);
+
+      if (this.options.withSearch) {
+        this.$select.find('.' + this.namespace + '-dropdown').prepend(this.options.tpl.search());
+      }
+
+      this.$el.after(this.$select);
+
+      this.$select.on({
+        click: $.proxy(this._click, this)
+      });
+    },
+    show: function() {
+
+    },
+    hide: function() {
+
+    },
+    add: function() {
+
+    },
+    remove: function() {
+
+    },
+    select: function() {
+
+    },
+    unselect: function() {
+
+    },
+    _click: function() {
+
+    },
+    get: function() {
+
+    }
   };
 
   // Collection method.
