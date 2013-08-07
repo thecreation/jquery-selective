@@ -1,4 +1,4 @@
-/*! jQuery Selective - v0.1.0 - 2013-07-31
+/*! jQuery Selective - v0.1.0 - 2013-08-07
 * https://github.com/amazingSurge/jquery-selective
 * Copyright (c) 2013 amazingSurge; Licensed GPL */
 (function(window, document, $, undefined) {
@@ -62,6 +62,13 @@
 
       if (this.options.withSearch) {
         this.$select.find('.' + this.namespace + '-dropdown').prepend(this.options.tpl.search());
+      }
+
+      if (this.$options.length !== 0) {
+        var list = this.$select.find('.' + this.namespace + '-list');
+        for (var i = 0; i < this.$options.length; i++) {
+          list.append(this.options.tpl.listItem(this.$options[i].text));
+        }
       }
 
       this.$el.after(this.$select);
