@@ -22,19 +22,54 @@
     <script type="text/javascript" src="js/less.js"></script>
 
 </head>
-<body>
+<body style="padding: 100px;">
 
-<select id="selective-example">
-    <option value ="volvo">Volvo</option>
+<!-- <select id="selective-example" multiple="multiple">
+    <option value ="volvo"><button>Voxlvo</button></option>
     <option value ="saab">Saab</option>
     <option value="opel">Opel</option>
     <option value="audi">Audi</option>
-</select>
+</select> -->
 
+<select id="addMember-example" multiple="multiple">
+    <option>a</option>
+    <option>b</option>
+    <option>c</option>
+    <option>d</option>
+    <option>e</option>
+</select>
 <script src="../src/jquery-selective.js"></script>
 <script>
 $(document).ready(function() {
-    $('#selective-example').selective();
+
+    // $('#selective-example').selective();
+    $('#addMember-example').selective({
+        namespace: 'addMember',
+        // tpl: {
+        //     item: function(namespace, content) {
+        //         return  '<li>'+
+        //                     '<a href="">'+
+        //                         '<img class="avatarSmall" alt="" src="../demo/images/img-user.png">'+
+        //                     '</a>'+
+        //                     '<div class="avatarRemoveSmall' + ' ' + namespace + '-remove"></div>'+
+        //                 '</li>';
+        //     },
+        //     trigger: function(namespace) {
+        //         return '<a class="' + namespace + '-add">Add</a>';
+        //     },
+        //     listItem: function(namespace, content) {
+        //         return  '<li>'+
+        //                     '<a class="vcard">'+
+        //                         '<img src="../demo/images/img-user.png" alt="" class="avatarSmall">'+
+        //                         '<div class="vcard-info">'+
+        //                             '<h5>Jack</h5>'+
+        //                             '<span class="group">Programmer</span>'+
+        //                         '</div>'+
+        //                     '</a>'+
+        //                 '</li>';
+        //     }
+        // }
+    })
 });
 
 </script>  

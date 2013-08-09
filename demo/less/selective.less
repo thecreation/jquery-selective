@@ -1,129 +1,100 @@
 @import 'prelude-init.less';
 
-// @addMemberLineheight: 30px;
-// @addMemberBorderColor: rgb(255, 255, 255);
+.addMember-toggle {
+    cursor: pointer;
+    -moz-box-sizing: content-box;
+    background: linear-gradient(to bottom, rgb(241, 241, 241), rgb(223, 223, 223) 70%, rgb(218, 218, 218)) repeat scroll 0 0 rgb(223, 223, 223);
+    border-color: rgb(206, 206, 206) rgb(186, 186, 186) rgb(168, 168, 168);
+    border-radius: 3px 3px 2px 2px;
+    border-style: solid;
+    border-width: 1px 1px 0;
+    box-shadow: 0 1px rgb(253, 253, 253) inset, 0 0 0 1px rgb(234, 234, 234) inset, 0 1px rgb(168, 168, 168), 0 3px rgb(187, 187, 187), 0 4px rgb(168, 168, 168), 0 5px 2px rgba(0, 0, 0, 0.25);
+    color: rgb(85, 85, 85);
+    display: inline-block;
+    font-size: 11px;
+    font-weight: bold;
+    height: 28px;
+    line-height: 28px;
+    margin: 0 0 5px;
+    outline: 0 none;
+    padding: 0 12px;
+    text-decoration: none;
+    text-shadow: 0 1px white;
+    vertical-align: baseline;
+    &:hover {
+        background: none repeat scroll 0 0 rgb(223, 223, 223);
+        border-top-color: rgb(201, 201, 201);
+    }
 
-// @avatarSmallWidth: 34px;
-// @avatarSmallHeight: 34px;
-
-// .addMember {
-// 	display: inline-block;
-// 	vertical-align: middle;
-// 	line-height: @addMemberLineheight;
-// 	>a, >.avatarContainer {
-// 		display: inline-block;
-// 		margin-right: 10px;
-// 		// vertical-align: middle;
-// 	}
-//     .has-border:hover {
-//         .box-shadow(~"0 3px 3px 0 rgba(0,0,0,.1)");
-//     }
-// }
-// .addMember-dropdown {
-// 	display: inline-block;
-// 	position: relative;
-// 	vertical-align: top;
-// }
-// .addMember-add {
-// 	display: inline-block;
-// 	width: @avatarSmallWidth;
-// 	height: @avatarSmallHeight;
-// 	cursor: pointer;
-// 	background: url(../images/img-add-user.png) no-repeat center;
-// 	// background: url(./images/img-add-user-hover.png) no-repeat center;
-// 	background-size: 100% 100%;
-// 	border: 3px solid @addMemberBorderColor;
-// 	.box-shadow(~"0 1px 2px 0 rgba(0,0,0,.1)");
-// 	.border-radius(1000px);
-// 	&:hover, &.is-active {
-// 		background-image: url(../images/img-add-user-hover.png);
-// 		.box-shadow(~"0 2px 3px 0 rgba(0,0,0,.1)");
-// 	}
-// }
-
-// .addMember-search {
-// 	display: none;
-// 	background-color: white;
-// 	padding-top: 10px;
-// 	padding-bottom: 10px;
-// 	.border-radius(4px);
-// 	border: 1px solid rgb(221, 221, 221);
-// 	position: absolute;
-// 	top: 50px;
-// 	z-index: 9999;
-// 	&.is-show {
-// 		display: block;
-// 	}
-// 	&:before {
-// 	    content: "";
-// 	    background-color: white;
-// 	    border-top: 1px solid rgb(221, 221, 221);
-// 	    border-left: 1px solid rgb(221, 221, 221);
-// 	    display: block;
-// 	    height: 10px;
-// 	   	width: 10px;
-// 	    position: absolute;
-// 	    .rotate(45deg);
-// 	    top: -6px;
-// 	    left: 14px;
-
-// 	}
-// 	> form {
-// 		margin-left: 10px;
-// 		margin-right: 10px;
-// 		margin-bottom: 10px;
-// 	}
-// 	>ul {
-// 		margin: 0;
-// 		list-style: none;
-// 	}
-// 	li {
-// 		border-top: 1px solid transparent;
-// 		border-bottom: 1px solid transparent;
-// 		padding:5px 10px;
-// 		cursor: pointer;
-// 		&:hover{
-// 			border-top: 1px solid rgb(222, 238, 244);
-// 			border-bottom: 1px solid rgb(222, 238, 244);
-// 			background-color: rgb(229, 246, 252);
-// 		}
-// 	}
-// 	a.vcard {
-// 		text-decoration: none;
-// 		line-height: 40px;
-// 		h5 {
-// 			font-size: 14px;
-// 			line-height: 14px;
-// 			color: rgb(51, 51, 51);
-// 			display: block;
-// 		}
-// 		.group {
-// 			display: block;
-// 			font-size: 12px;
-// 			line-height: 12px;
-// 			color: rgb(170, 170, 170);
-// 		}
-
-// 	}
-
-// 	.vcard-info {
-// 		margin-left: 10px;
-// 	}
-// }
-
-.selective-items {
-	list-style: none;
+    &:active, &.addMember-active {
+        background: none repeat scroll 0 0 rgb(223, 223, 223);
+        border-top-color: rgb(201, 201, 201);
+        border-radius: 3px 3px 3px 3px;
+        border-width: 0;
+        box-shadow: 0 0 3px rgba(0, 0, 0, 0.3) inset, 0 1px 1px rgba(0, 0, 0, 0.4) inset, 0 1px white;
+        margin-bottom: 0;
+        padding: 1px 13px 0;
+        vertical-align: -5px;
+    }
 }
 
-.selective-list {
-	list-style: none;
-	margin-left: 0;
+.addMember-list {
+    list-style: none;
+    margin-left: 0;
+    border: 1px solid gray;
 }
 
-.selective-toggle {
-	
+.addMember-dropdown {
+    width: 200px;
+    display: none;
+    position: absolute;
+}
+.addMember-listItem {
+    padding: 4px 10px;
+    &:hover {
+        background-color: rgb(236, 242, 247);
+    }
+    &:active, &.addMember-selected {
+        background-color: rgb(50, 185, 226);
+    }
 }
 
-.selective-selected {
-	background-color: rgb(53, 153, 255);
+.addMember-augment {
+    display: inline-block;
+    &.addMember-active {
+        .addMember-toggle {
+            background: none repeat scroll 0 0 rgb(223, 223, 223);
+            border-top-color: rgb(201, 201, 201);
+            border-radius: 3px 3px 3px 3px;
+            border-width: 0;
+            box-shadow: 0 0 3px rgba(0, 0, 0, 0.3) inset, 0 1px 1px rgba(0, 0, 0, 0.4) inset, 0 1px white;
+            margin-bottom: 0;
+            padding: 1px 13px 0;
+            vertical-align: -5px;
+        }
+        .addMember-dropdown {
+            display: block;
+        }
+    }
+}
+
+.addMember-items {
+    list-style: none;
+    margin-left: 0;
+    display: inline-block;
+}
+
+.addMember-item {
+    display: inline-block;
+    border: 1px solid gray;
+    padding: 4px 14px;
+    position: relative;
+}
+
+.addMember-remove {
+    position: absolute;
+    line-height: 1;
+    right: 2px;
+    top: 0px;
+    cursor: pointer;
 }
