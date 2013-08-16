@@ -24,52 +24,186 @@
 </head>
 <body style="padding: 100px;">
 
-<!-- <select id="selective-example" multiple="multiple">
-    <option value ="volvo"><button>Voxlvo</button></option>
-    <option value ="saab">Saab</option>
-    <option value="opel">Opel</option>
-    <option value="audi">Audi</option>
-</select> -->
-
-<select id="addMember-example" multiple="multiple">
-    <option>a</option>
-    <option>b</option>
-    <option>c</option>
-    <option>d</option>
-    <option>e</option>
+<p>namespace: 'car';</p>
+<select id="example" multiple="multiple">
+    <option value="BMW">BMW</option>
+    <option value="Peugeot">Peugeot</option>
+    <option value="Volkswagen">Volkswagen</option>
+    <option value="Audi">Audi</option>
+    <option value="Toyota">Toyota</option>
+    <option value="Honda">Honda</option>
+    <option value="Lexus">Lexus</option>
+    <option value="Land Rover">Land Rover</option>
+    <option value="Ford">Ford</option>
+    <option value="Cadillac">Cadillac</option>
+    <option value="Opel">Opel</option>
+    <option value="Dodge">Dodge</option>
+    <option value="Nissan">Nissan</option>
+    <option value="Volve">Volve</option>
 </select>
+
+<p>multiplt: true;</p>
+<select id="example2" multiple="multiple">
+    <option value="BMW">BMW</option>
+    <option value="Peugeot">Peugeot</option>
+    <option value="Volkswagen">Volkswagen</option>
+    <option value="Audi">Audi</option>
+    <option value="Toyota">Toyota</option>
+    <option value="Honda">Honda</option>
+    <option value="Lexus">Lexus</option>
+    <option value="Land Rover">Land Rover</option>
+    <option value="Ford">Ford</option>
+    <option value="Cadillac">Cadillac</option>
+    <option value="Opel">Opel</option>
+    <option value="Dodge">Dodge</option>
+    <option value="Nissan">Nissan</option>
+    <option value="Volve">Volve</option>
+</select>
+
+<p>triggerPosition: after;</p>
+<select id="example3" multiple="multiple">
+    <option value="BMW">BMW</option>
+    <option value="Peugeot">Peugeot</option>
+    <option value="Volkswagen">Volkswagen</option>
+    <option value="Audi">Audi</option>
+    <option value="Toyota">Toyota</option>
+    <option value="Honda">Honda</option>
+    <option value="Lexus">Lexus</option>
+    <option value="Land Rover">Land Rover</option>
+    <option value="Ford">Ford</option>
+    <option value="Cadillac">Cadillac</option>
+    <option value="Opel">Opel</option>
+    <option value="Dodge">Dodge</option>
+    <option value="Nissan">Nissan</option>
+    <option value="Volve">Volve</option>
+</select>
+
+<p>withSearch: true;</p>
+<select id="example4" multiple="multiple">
+    <option value="BMW">BMW</option>
+    <option value="Peugeot">Peugeot</option>
+    <option value="Volkswagen">Volkswagen</option>
+    <option value="Audi">Audi</option>
+    <option value="Toyota">Toyota</option>
+    <option value="Honda">Honda</option>
+    <option value="Lexus">Lexus</option>
+    <option value="Land Rover">Land Rover</option>
+    <option value="Ford">Ford</option>
+    <option value="Cadillac">Cadillac</option>
+    <option value="Opel">Opel</option>
+    <option value="Dodge">Dodge</option>
+    <option value="Nissan">Nissan</option>
+    <option value="Volve">Volve</option>
+</select>
+
+<p>build from data by personal modal;</p>
+<div id="example5"></div>
+
 <script src="../src/jquery-selective.js"></script>
 <script>
 $(document).ready(function() {
-
-    // $('#selective-example').selective();
-    $('#addMember-example').selective({
+    var member = [
+        {
+            id: 'uid_1',
+            name: 'Jack',
+            img: 'images/img-user.png'
+        },
+        {
+            id: 'uid_2',
+            name: 'Dav',
+            img: 'images/img-user.png'
+        },
+        {
+            id: 'uid_3',
+            name: 'Dava',
+            img: 'images/img-user.png'
+        },
+        {
+            id: 'uid_4',
+            name: 'Vic',
+            img: 'images/img-user.png'
+        },
+        {
+            id: 'uid_5',
+            name: 'Log',
+            img: 'images/img-user.png'
+        },
+        {
+            id: 'uid_6',
+            name: 'Green',
+            img: 'images/img-user.png'
+        },
+        {
+            id: 'uid_8',
+            name: 'Jim',
+            img: 'images/img-user.png'
+        },
+        {
+            id: 'uid_9',
+            name: 'Stive',
+            img: 'images/img-user.png'
+        },
+        {
+            id: 'uid_10',
+            name: 'Rogon',
+            img: 'images/img-user.png'
+        },
+        {
+            id: 'uid_11',
+            name: 'Ham',
+            img: 'images/img-user.png'
+        },
+        {
+            id: 'uid_12',
+            name: 'Rose',
+            img: 'images/img-user.png'
+        },
+        {
+            id: 'uid_13',
+            name: 'Jimmy',
+            img: 'images/img-user.png'
+        },
+        {
+            id: 'uid_14',
+            name: 'Ben',
+            img: 'images/img-user.png'
+        },
+        {
+            id: 'uid_15',
+            name: 'Tom',
+            img: 'images/img-user.png'
+        }
+    ];
+    $('#example').selective({
+        namespace: 'car'
+    }); 
+    $('#example2').selective({
+        namespace: 'car',
+        multiple: true
+    });
+    $('#example3').selective({
+        namespace: 'car',
+        triggerPosition: 'after'
+    });
+    $('#example4').selective({
+        namespace: 'car',
+        withSearch: true
+    });
+    $('#example5').selective({  
         namespace: 'addMember',
-        // tpl: {
-        //     item: function(namespace, content) {
-        //         return  '<li>'+
-        //                     '<a href="">'+
-        //                         '<img class="avatarSmall" alt="" src="../demo/images/img-user.png">'+
-        //                     '</a>'+
-        //                     '<div class="avatarRemoveSmall' + ' ' + namespace + '-remove"></div>'+
-        //                 '</li>';
-        //     },
-        //     trigger: function(namespace) {
-        //         return '<a class="' + namespace + '-add">Add</a>';
-        //     },
-        //     listItem: function(namespace, content) {
-        //         return  '<li>'+
-        //                     '<a class="vcard">'+
-        //                         '<img src="../demo/images/img-user.png" alt="" class="avatarSmall">'+
-        //                         '<div class="vcard-info">'+
-        //                             '<h5>Jack</h5>'+
-        //                             '<span class="group">Programmer</span>'+
-        //                         '</div>'+
-        //                     '</a>'+
-        //                 '</li>';
-        //     }
-        // }
-    })
+        data: member, 
+        tpl: {
+            triggerButton: function() {
+                return '<div class="' + this.namespace + '-trigger-button"></div>';
+            },
+            listItem: function(data) {
+                return '<li class="' + this.namespace + '-list-item"><img class="avatarSmall" src="' + data.img + '">' + data.name + '</li>';
+            },
+            option: function(data) {
+                return '<option value="' + this.options.tpl.optionValue.call(this) + '">' + data.name + '</option>';
+            }
+        }
+    });
 });
 
 </script>  
