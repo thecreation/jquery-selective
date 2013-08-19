@@ -28,42 +28,10 @@
     Selective.defaults = {
         namespace: 'selective',
         // trigger: 'click', // 'hover' or 'click'
-        closeOnSelect: true,
+        closeOnSelect: false,
         data: null,
         withSearch: false,
         // triggerPosition: 'before', // before | after
-        // tpl: {
-        //     option: function(content) {
-        //         return '<option>' + content + '</option>';
-        //     },
-        //     items: function() {
-        //         return '<ul class="' + this.namespace + '-items"></ul>';
-        //     },
-        //     item: function(content) {
-        //         return '<li class="' + this.namespace + '-item">' + content + '</li>';
-        //     },
-        //     itemRemove: function() {
-        //         return '<span class="' + this.namespace + '-remove"></span>';
-        //     },
-        //     trigger: function() {
-        //         return '<div class="' + this.namespace + '-trigger"></div>';
-        //     },
-        //     triggerButton: function() {
-        //         return '<div class="' + this.namespace + '-trigger-button">Add</div>';
-        //     },
-        //     triggerDropdown: function() {
-        //         return '<div class="' + this.namespace + '-trigger-dropdown"></div>'
-        //     },
-        //     search: function() {
-        //         return '<input class="' + this.namespace + '-search" type="text" placeholder="Search...">';
-        //     },
-        //     list: function() {
-        //         return '<ul class="' + this.namespace + '-list"></ul>';
-        //     },
-        //     listItem: function() {
-        //         return '<li class="' + this.namespace + '-list-item">' + content + '</li>';
-        //     }
-        // }
         tpl: {
             frame: function() {
                 return  '<div class="' + this.namespace + '">'+
@@ -84,7 +52,7 @@
                 return '<select class="' + this.namespace + '-select" name="' + this.namespace + '" multiple="multiple"></select>';
             },
             optionValue: function(data) {
-                return data.id;
+                return data.name;
             },
             option: function(content) {
                 return '<option value="' + this.options.tpl.optionValue.call(this)+ '">' + content + '</option>';
@@ -99,7 +67,7 @@
                         '</li>';
             },
             itemRemove: function() {
-                return '<span class="' + this.namespace + '-remove"></span>';
+                return '<span class="' + this.namespace + '-remove">x</span>';
             },
             triggerButton: function() {
                 return '<div class="' + this.namespace + '-trigger-button">Add</div>';
@@ -124,9 +92,7 @@
             }();
 
             var $frame = $(this.options.tpl.frame.call(this));
-            if(this.options.withSearch === true){
-               $frame.find('.'+this.namespace+'-trigger-dropdown').prepend(this.options.tpl.search.call(this)); 
-            } 
+
             this.$el.after($frame);
 
             this.$selective = this.$el.next('.' + this.namespace);
@@ -136,33 +102,41 @@
             this.$triggerDropdown = this.$selective.find('.' + this.namespace + '-trigger-dropdown');
             this.$list = this.$selective.find('.' + this.namespace + '-list');
 
+            if(this.options.withSearch === true){
+               this.$triggerDropdown.prepend(this.options.tpl.search.call(this)); 
+               this.$search = this.$selective.find('.' + this.namespace + '-search');
+            }
+
             this._list.build.call(this);
 
             this._trigger.click.call(this);
             this._list.click.call(this);
+            this._items.click.call(this);
+
+            this._options.getOption.call(this);
         },
         _items: {
             // build: function() {
                 // return self.options.tpl.items.call(self);
             // },
-            add: function(content) {
-                this.$items.append(this.options.tpl.item.call(this, content));
+            add: function(content, index) {
+                var $item = $(this.options.tpl.item.call(this, content));
+                this.setIndex($item, index);
+                this.$items.append($item);
                 return this;
             },
             remove: function($item) {
+                this._list.unselect.call(this, this.getItem(this.$list, $item.data('selective_index')));
                 $item.remove();
                 return this;
             },
-            getItem: function($list, index) {
-                var _items = $list.children();
-                for(var i = 0; i < _items.length; i++) {
-                    if(_items.eq(i).data('selective_index') === index) {
-                        return _items.eq(i);
-                    }
-                }
-            },
             click: function() {
-
+                var self = this;
+                this.$items.on('click', '.' + this.namespace + '-remove', function() {
+                    var $this = $(this),
+                        $item = $this.parents('li');
+                    self._items.remove.call(self, $item);
+                });
             }
         },
         _trigger: {
@@ -172,11 +146,27 @@
             show: function() {
                 this.$trigger.addClass(this.namespace + '-active');
                 this.opened = true;
+
+                var self = this;
+                if(this.options.closeOnSelect === true) {
+                    $(document).on('click.select', function(ev){
+                        if ($(ev.target).closest(self.$triggerButton).length === 0 && $(ev.target).closest(self.$search).length === 0) {
+                            self._trigger.hide.call(self);
+                        }
+                    });
+                }else {
+                   $(document).on('click.select', function(ev){
+                        if ($(ev.target).closest(self.$trigger).length === 0) {
+                            self._trigger.hide.call(self);
+                        }
+                    }); 
+                }
                 return this;
             },
             hide: function() {
                 this.$trigger.removeClass(this.namespace + '-active');
                 this.opened = false;
+                $(document).off('click.select');
                 return this;
             },
             click: function() {
@@ -200,25 +190,30 @@
                         $.each(this.$options, function(i, n) {
                             self._options.unselect(self.$options.eq(i));
                             var $listItem = $(self.options.tpl.listItem.call(self, n.text));
-                            $listItem.data('selective-index', n.value);
+                            $listItem.data('selective_index', n.value);
                             $list.append($listItem);
                         });
                     }
                 } else {
                     $.each(this.options.data, function(i, n) {
-                      // _list += self.options.tpl.listItem.call(self, self.options.data[i]);  
                         var $listItem = $(self.options.tpl.listItem.call(self, self.options.data[i]));
-                        $listItem.data('selective-index', self.options.tpl.optionValue(self.options.data[i]));
+                        self.setIndex.call(self, $listItem, self.options.tpl.optionValue(self.options.data[i]));
+                        self.setPositon.call(self, $listItem, i);
                         $list.append($listItem);
                     });
                 }
                 this.$list.replaceWith($list);
+                this._list.update.call(this);
+            },
+            update: function() {
+                this.$list = this.$selective.find('.' + this.namespace + '-list');
+                return this;
             },
             select: function(obj) {
                 obj.addClass(this.namespace + '-selected');
                 return this;
             },
-            unselect: function() {
+            unselect: function(obj) {
                 obj.removeClass(this.namespace + '-selected');
                 return this;
             },
@@ -228,10 +223,6 @@
             },
             remove: function($li) {
                 $li.remove();
-                return this;
-            },
-            index: function($li, value) {
-                $li.data('selective_index', value);
                 return this;
             },
             filter: function(value) {
@@ -250,8 +241,26 @@
             },
             click: function() {
                 var self = this;
-                this.$list.on('click', 'li', function() {
-                    console.log('xxx');
+                console.log(self);
+                this.$list.on('click', 'li', function(){
+                    var $this = $(this);
+
+                    //only select
+                    if(!$this.hasClass(self.namespace + '-selected')){
+
+                    // //select and unselect
+                    // if($this.hasClass(self.namespace + '-selected')){
+                    //     self._list.unselect.call(self, $this);                   
+                    // }else{
+                        self._list.select.call(self, $this);
+                        if(self.options.data === null) {
+                            self._items.add.call(self, $this.text(), $this.data('selective_index'));
+                            self._options.select.call(self, self._options.getOption.call(self, $this.data('selective_index')));
+                        }else{
+                            self._items.add.call(self, self.options.data[$this.data('selective_position')], $this.data('selective_index'));  
+                            self._options.add.call(self, self.options.data[$this.data('selective_position')])
+                        }                       
+                    }
                 });
             }
         },
@@ -260,22 +269,58 @@
                 // return this.options.tpl.search.call(this);
             // },
             bind: function() {
-
+                var self = this;
+                this.$search.change(function(){
+                    self._list.filter.call(self, self.$search.val());
+               });
             }
         },
         _options: {
             select: function(opt) {
                 opt.prop('selected', true);
-                return self;
+                return this;
             },
             unselect: function(opt) {
                 opt.prop('selected', false);
-                return self;
+                return this;
             },
-            add: function() {
-                self.$select.append(self.options.tpl.option.call(self));
-                return self;
+            add: function(data) {
+                console.log(this.$select)
+                this.$select.append(this.options.tpl.option.call(this, data));
+                return this;
+            },
+            getOption: function(val) {              
+                var $options = this.$select.children('option'),
+                    index = '';
+                $.each($options, function(i, n) {
+                    if(n.value === val) {
+                        index = i;
+                    }
+                });
+                return $options.eq(index);
             }
+        },
+        setPositon: function(obj, position) {
+            obj.data('selective_position', position);
+            return this;
+        },
+        setIndex: function(obj, index) {
+            obj.data('selective_index', index);
+            return this;
+        },
+        getItem: function($list, index) {
+            var $items = $list.children('li');
+            for(var i = 0; i < $items.length; i++) {
+                if($items.eq(i).data('selective_index') === index) {
+                    return $items.eq(i);
+                }
+            }
+        },
+        show: function() {
+            this._trigger.show.call(this);         
+        },
+        hide: function() {
+            this._trigger.hide.call(this);
         }
 
 

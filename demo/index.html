@@ -193,11 +193,23 @@ $(document).ready(function() {
         namespace: 'addMember',
         data: member, 
         tpl: {
+            optionValue: function(data) {
+                return data.id;
+            },
+            itemRemove: function() {
+                return '<span class="' + this.namespace + '-remove"></span>';
+            },
             triggerButton: function() {
                 return '<div class="' + this.namespace + '-trigger-button"></div>';
             },
             listItem: function(data) {
                 return '<li class="' + this.namespace + '-list-item"><img class="avatarSmall" src="' + data.img + '">' + data.name + '</li>';
+            },
+            item: function(data) {
+                return  '<li class="' + this.namespace + '-item"><img class="avatarSmall" src="' + data.img + '">' + 
+                            data.name + 
+                            this.options.tpl.itemRemove.call(this) +
+                        '</li>';
             },
             option: function(data) {
                 return '<option value="' + this.options.tpl.optionValue.call(this) + '">' + data.name + '</option>';
