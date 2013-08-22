@@ -42,7 +42,7 @@
     <option value="Volve">Volve</option>
 </select>
 
-<p>multiplt: true;</p>
+<p>closeOnSelect: true;</p>
 <select id="example2" multiple="multiple">
     <option value="BMW">BMW</option>
     <option value="Peugeot">Peugeot</option>
@@ -60,7 +60,7 @@
     <option value="Volve">Volve</option>
 </select>
 
-<p>triggerPosition: after;</p>
+<p>triggerPosition after;</p>
 <select id="example3" multiple="multiple">
     <option value="BMW">BMW</option>
     <option value="Peugeot">Peugeot</option>
@@ -78,7 +78,7 @@
     <option value="Volve">Volve</option>
 </select>
 
-<p>withSearch: true;</p>
+<p>withSearch: true; search type: 'change'</p>
 <select id="example4" multiple="multiple">
     <option value="BMW">BMW</option>
     <option value="Peugeot">Peugeot</option>
@@ -96,8 +96,47 @@
     <option value="Volve">Volve</option>
 </select>
 
+<p>withSearch: true; search type: 'keyup'</p>
+<select id="example5" multiple="multiple">
+    <option value="BMW">BMW</option>
+    <option value="Peugeot">Peugeot</option>
+    <option value="Volkswagen">Volkswagen</option>
+    <option value="Audi">Audi</option>
+    <option value="Toyota">Toyota</option>
+    <option value="Honda">Honda</option>
+    <option value="Lexus">Lexus</option>
+    <option value="Land Rover">Land Rover</option>
+    <option value="Ford">Ford</option>
+    <option value="Cadillac">Cadillac</option>
+    <option value="Opel">Opel</option>
+    <option value="Dodge">Dodge</option>
+    <option value="Nissan">Nissan</option>
+    <option value="Volve">Volve</option>
+</select>
+
+<p>with default items from html</p>
+<select id="example6" multiple="multiple">
+    <option value="BMW">BMW</option>
+    <option value="Peugeot">Peugeot</option>
+    <option value="Volkswagen" selected="selected">Volkswagen</option>
+    <option value="Audi">Audi</option>
+    <option value="Toyota" selected="selected">Toyota</option>
+    <option value="Honda">Honda</option>
+    <option value="Lexus" selected="selected">Lexus</option>
+    <option value="Land Rover">Land Rover</option>
+    <option value="Ford">Ford</option>
+    <option value="Cadillac">Cadillac</option>
+    <option value="Opel">Opel</option>
+    <option value="Dodge">Dodge</option>
+    <option value="Nissan">Nissan</option>
+    <option value="Volve">Volve</option>
+</select>
+
 <p>build from data by personal modal;</p>
-<div id="example5"></div>
+<div id="example7"></div>
+
+<p>build from data by personal modal;with default items form data;</p>
+<div id="example8"></div>
 
 <script src="../src/jquery-selective.js"></script>
 <script>
@@ -105,93 +144,141 @@ $(document).ready(function() {
     var member = [
         {
             id: 'uid_1',
-            name: 'Jack',
+            name: 'uid_1',
             img: 'images/img-user.png'
         },
         {
             id: 'uid_2',
-            name: 'Dav',
+            name: 'uid_2',
             img: 'images/img-user.png'
         },
         {
             id: 'uid_3',
-            name: 'Dava',
+            name: 'uid_3',
             img: 'images/img-user.png'
         },
         {
             id: 'uid_4',
-            name: 'Vic',
+            name: 'uid_4',
             img: 'images/img-user.png'
         },
         {
             id: 'uid_5',
-            name: 'Log',
+            name: 'uid_5',
             img: 'images/img-user.png'
         },
         {
             id: 'uid_6',
-            name: 'Green',
+            name: 'uid_6',
+            img: 'images/img-user.png'
+        },
+        {
+            id: 'uid_7',
+            name: 'uid_7',
             img: 'images/img-user.png'
         },
         {
             id: 'uid_8',
-            name: 'Jim',
+            name: 'uid_8',
             img: 'images/img-user.png'
         },
         {
             id: 'uid_9',
-            name: 'Stive',
+            name: 'uid_9',
             img: 'images/img-user.png'
         },
         {
             id: 'uid_10',
-            name: 'Rogon',
+            name: 'uid_10',
             img: 'images/img-user.png'
         },
         {
             id: 'uid_11',
-            name: 'Ham',
+            name: 'uid_11',
             img: 'images/img-user.png'
         },
         {
             id: 'uid_12',
-            name: 'Rose',
+            name: 'uid_12',
             img: 'images/img-user.png'
         },
         {
             id: 'uid_13',
-            name: 'Jimmy',
+            name: 'uid_13',
             img: 'images/img-user.png'
         },
         {
             id: 'uid_14',
-            name: 'Ben',
+            name: 'uid_14',
             img: 'images/img-user.png'
         },
         {
             id: 'uid_15',
-            name: 'Tom',
+            name: 'uid_15',
             img: 'images/img-user.png'
         }
     ];
+    var selected = [
+        {
+            id: 'uid_16',
+            name: 'uid_16',
+            img: 'images/img-user.png'
+        },
+        {
+            id: 'uid_17',
+            name: 'uid_17',
+            img: 'images/img-user.png'
+        },
+        {
+            id: 'uid_18',
+            name: 'uid_18',
+            img: 'images/img-user.png'
+        },
+    ];
+
     $('#example').selective({
-        namespace: 'car'
+        namespace: 'car',
     }); 
+    
     $('#example2').selective({
         namespace: 'car',
-        multiple: true
+        closeOnSelect: true 
     });
     $('#example3').selective({
         namespace: 'car',
-        triggerPosition: 'after'
+        tpl: {
+            frame: function() {
+                return  '<div class="' + this.namespace + '">'+
+                            this.options.tpl.items.call(this) + 
+                            '<div class="' + this.namespace + '-trigger">'+
+                                this.options.tpl.triggerButton.call(this) +
+                                '<div class="' + this.namespace + '-trigger-dropdown">'+
+                                    this.options.tpl.list.call(this) + 
+                                '</div>'+
+                            '</div>'+ 
+                        '</div>'
+            },
+        }
     });
     $('#example4').selective({
         namespace: 'car',
-        withSearch: true
+        withSearch: true,
+        searchType: 'change'
     });
-    $('#example5').selective({  
+
+    $('#example5').selective({
+        namespace: 'car',
+        withSearch: true,
+        searchType: 'keyup'
+    });
+
+    $('#example6').selective({
+        namespace: 'car'
+    });
+
+    $('#example7').selective({  
         namespace: 'addMember',
-        data: member, 
+        data: member,
         tpl: {
             optionValue: function(data) {
                 return data.id;
@@ -212,7 +299,36 @@ $(document).ready(function() {
                         '</li>';
             },
             option: function(data) {
-                return '<option value="' + this.options.tpl.optionValue.call(this) + '">' + data.name + '</option>';
+                return '<option value="' + this.options.tpl.optionValue.call(this, data) + '">' + data.name + '</option>';
+            }
+        }
+    });
+
+    $('#example8').selective({  
+        namespace: 'addMember',
+        data: member,
+        items: selected, 
+        tpl: {
+            optionValue: function(data) {
+                return data.id;
+            },
+            itemRemove: function() {
+                return '<span class="' + this.namespace + '-remove"></span>';
+            },
+            triggerButton: function() {
+                return '<div class="' + this.namespace + '-trigger-button"></div>';
+            },
+            listItem: function(data) {
+                return '<li class="' + this.namespace + '-list-item"><img class="avatarSmall" src="' + data.img + '">' + data.name + '</li>';
+            },
+            item: function(data) {
+                return  '<li class="' + this.namespace + '-item"><img class="avatarSmall" src="' + data.img + '">' + 
+                            data.name + 
+                            this.options.tpl.itemRemove.call(this) +
+                        '</li>';
+            },
+            option: function(data) {
+                return '<option value="' + this.options.tpl.optionValue.call(this, data) + '">' + data.name + '</option>';
             }
         }
     });
