@@ -115,7 +115,7 @@
 </select>
 
 <p>with default items from html</p>
-<select id="example6" multiple="multiple">
+<select id="example8" multiple="multiple">
     <option value="BMW">BMW</option>
     <option value="Peugeot">Peugeot</option>
     <option value="Volkswagen" selected="selected">Volkswagen</option>
@@ -132,11 +132,28 @@
     <option value="Volve">Volve</option>
 </select>
 
-<p>build from data by personal modal;</p>
-<div id="example7"></div>
+<p>build from data by personal modal and local data;</p>
+<div id="example9"></div>
 
-<p>build from data by personal modal;with default items form data;</p>
-<div id="example8"></div>
+<p>build from data by personal modal and local data;</p>
+<p>with default items form data;</p>
+<div id="example10"></div>
+
+<p>withSearch: true;</p>
+<p>searchType: 'keyup'</p>
+<p>ajax.work: true;</p>
+<p>ajax.loadMore: true;</p> 
+
+<select id="example6" multiple="multiple">
+</select>
+
+<p>withSearch: true;</p>
+<p>searchType: 'change'</p>
+<p>ajax.work: true;</p>
+<p>ajax.loadMore: true;</p> 
+
+<select id="example7" multiple="multiple">
+</select>
 
 <script src="../src/jquery-selective.js"></script>
 <script>
@@ -218,7 +235,12 @@ $(document).ready(function() {
             img: 'images/img-user.png'
         }
     ];
-    var selected = [
+    var items = [
+        {
+            id: 'uid_1',
+            name: 'uid_1',
+            img: 'images/img-user.png'
+        },
         {
             id: 'uid_16',
             name: 'uid_16',
@@ -273,12 +295,117 @@ $(document).ready(function() {
     });
 
     $('#example6').selective({
+        namespace: 'addMember',
+        local: member,
+        withSearch: true,
+        buildFromHtml: false,
+        searchType: 'keyup',       
+        tpl: {
+            optionValue: function(data) {
+                return data.id;
+            },
+            itemRemove: function() {
+                return '<span class="' + this.namespace + '-remove"></span>';
+            },
+            triggerButton: function() {
+                return '<div class="' + this.namespace + '-trigger-button"></div>';
+            },
+            listItem: function(data) {
+                return '<li class="' + this.namespace + '-list-item"><img class="avatarSmall" src="' + data.img + '">' + data.name + '</li>';
+            },
+            item: function(data) {
+                return  '<li class="' + this.namespace + '-item"><img class="avatarSmall" src="' + data.img + '">' + 
+                            data.name + 
+                            this.options.tpl.itemRemove.call(this) +
+                        '</li>';
+            },
+            option: function(data) {
+                return '<option value="' + this.options.tpl.optionValue.call(this, data) + '">' + data.name + '</option>';
+            }
+        },
+        ajax: {
+            work: true,
+            url: 'test.json',
+            loadMore: true,
+            pageSize: 10
+        },
+        query: function(api, search_text, page) {
+            $.ajax({
+                type: 'get',
+                url: api.options.ajax.url,
+                data: search_text,
+                success: function(data) {
+                    if(page === 1) {
+                        api.update(data.content); 
+                    }else{
+                        api._list.build(api, data.content);
+                    }                     
+                }
+            })
+        },
+    });
+
+    $('#example7').selective({
+        namespace: 'addMember',
+        local: member,
+        withSearch: true,
+        buildFromHtml: false,
+        searchType: 'change',       
+        tpl: {
+            optionValue: function(data) {
+                return data.id;
+            },
+            itemRemove: function() {
+                return '<span class="' + this.namespace + '-remove"></span>';
+            },
+            triggerButton: function() {
+                return '<div class="' + this.namespace + '-trigger-button"></div>';
+            },
+            listItem: function(data) {
+                return '<li class="' + this.namespace + '-list-item"><img class="avatarSmall" src="' + data.img + '">' + data.name + '</li>';
+            },
+            item: function(data) {
+                return  '<li class="' + this.namespace + '-item"><img class="avatarSmall" src="' + data.img + '">' + 
+                            data.name + 
+                            this.options.tpl.itemRemove.call(this) +
+                        '</li>';
+            },
+            option: function(data) {
+                return '<option value="' + this.options.tpl.optionValue.call(this, data) + '">' + data.name + '</option>';
+            }
+        },
+        ajax: {
+            work: true,
+            url: 'test.json',
+            loadMore: true,
+            pageSize: 10
+        },
+        query: function(api, search_text, page) {
+            $.ajax({
+                type: 'get',
+                url: api.options.ajax.url,
+                data: search_text,
+                success: function(data) {
+                    console.log(search_text)
+                    console.log(page)
+                    if(page === 1) {
+                        api.update(data.content); 
+                    }else{
+                        api._list.build(api, data.content);
+                    }                     
+                }
+            })
+        },
+    });
+
+    $('#example8').selective({
         namespace: 'car'
     });
 
-    $('#example7').selective({  
+    $('#example9').selective({  
         namespace: 'addMember',
-        data: member,
+        local: member,
+        buildFromHtml: false,
         tpl: {
             optionValue: function(data) {
                 return data.id;
@@ -304,10 +431,11 @@ $(document).ready(function() {
         }
     });
 
-    $('#example8').selective({  
+    $('#example10').selective({  
         namespace: 'addMember',
-        data: member,
-        items: selected, 
+        local: member,
+        selected: items,
+        buildFromHtml: false,
         tpl: {
             optionValue: function(data) {
                 return data.id;
@@ -332,6 +460,7 @@ $(document).ready(function() {
             }
         }
     });
+
 });
 
 </script>  

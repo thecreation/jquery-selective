@@ -17,18 +17,17 @@
 
         this.options = $.extend(true, {}, Selective.defaults, options);
 
-        // this.$optgroups = this.$el.find('optgroup');
-
         this.namespace = this.options.namespace;
 
         var self = this;
+        var $frame = $(this.options.tpl.frame.call(this));
+
         //get the select      
         this.$select = this.$el.is('select') === true ? this.$el : function _build(){
             self.$el.html(self.options.tpl.select.call(self));
             return self.$el.children('select');
         }();
-
-        var $frame = $(this.options.tpl.frame.call(this));
+        
         this.$el.after($frame);
 
         this._init();
@@ -37,21 +36,30 @@
 
     Selective.defaults = {
         namespace: 'selective',
+        buildFromHtml: true,
         closeOnSelect: false,
-        data: null,
-        items: null,
+        local: null,
+        selected: null,
         withSearch: false,
-        searchType: null, //'query', 'change' or 'keyup'
-        // triggerPosition: 'before', // before | after
+        searchType: null, //'change' or 'keyup'
+        ajax: {
+            work: false,
+            url: null,
+            quietMills: null,
+            loadMore: false,
+            pageSize: null
+        },
         tpl: {
             frame: function() {
-                return  '<div class="' + this.namespace + '">'+
-                            '<div class="' + this.namespace + '-trigger">'+
+                return  '<div class="' + this.namespace + '">' +
+                            '<div class="' + this.namespace + '-trigger">' +
                                 this.options.tpl.triggerButton.call(this) +
-                                '<div class="' + this.namespace + '-trigger-dropdown">'+
-                                    this.options.tpl.list.call(this) + 
-                                '</div>'+
-                            '</div>'+
+                                '<div class="' + this.namespace + '-trigger-dropdown">' +
+                                    '<div class="' + this.namespace + '-list-wrap">' +
+                                        this.options.tpl.list.call(this) + 
+                                    '</div>' +
+                                '</div>' +
+                            '</div>' +
                             this.options.tpl.items.call(this) + 
                         '</div>'
             },
@@ -89,9 +97,7 @@
                 return '<li class="' + this.namespace + '-list-item">' + content + '</li>';
             }
         },
-        query: function() {
-
-        },
+        query: function(api, search_text, page) {},
         onShow: function() {},
         onHide: function() {},
         onSearch: function() {},
@@ -103,324 +109,356 @@
 
     Selective.prototype = {
         constructor: Selective,
-        _init: function() {
-            var self = this;
-
-            this.$selective = this.$el.next('.' + this.namespace);
-            this.$items = this.$selective.find('.' + this.namespace + '-items');
-            this.$trigger = this.$selective.find('.' + this.namespace + '-trigger');
-            this.$triggerButton = this.$selective.find('.' + this.namespace + '-trigger-button');
-            this.$triggerDropdown = this.$selective.find('.' + this.namespace + '-trigger-dropdown');
-            this.$list = this.$selective.find('.' + this.namespace + '-list');
-
-            
-            if(this.options.items !== null) {
-                this._list.build.call(this, this.options.items);
-
-                $.each(this.$list.children(), function(i,n){
-                    var $n = $(n);
-                    self._list.select.call(self, $n);
-                    self._options.add.call(self, $n.data('selective_index'), true);
-                    self.itemAdd($n.data('selective_index'));
-                    self._options.select.call(self, self._options.getOption.call(self, $n.data('selective_index'))); 
-                }) 
+        _list: {
+            build: function(self, data) {
+                var $list = $('<ul></ul>');
+                var $options = self._options.getOptions(self);
+                if(self.options.buildFromHtml === true) {
+                    if($options.length !== 0) {
+                        $.each($options, function(i, n) {
+                            var $li = $(self.options.tpl.listItem.call(self, n.text)),
+                                $n = $(n);
+                            self.setIndex($li, $n);
+                            if($n.attr('selected') !== undefined) {
+                                self.select($li);
+                            }
+                            $list.append($li);
+                        });
+                    }
+                }else{
+                    if(data !== null) {
+                        $.each(data, function(i, v) {
+                            var $li = $(self.options.tpl.listItem.call(self, data[i]));
+                            self.setIndex($li, data[i]);
+                            $list.append($li);
+                        });
+                        if($options.length !== 0) {
+                            $.each($options, function(i, n) {
+                                var $n = $(n),
+                                    li = self.getItem('li', $list, self.options.tpl.optionValue($n.data('selective_index')));
+                                if(li !== undefined) {
+                                    self._list.select(self, li);
+                                }
+                            });
+                        }
+                    }                    
+                }
+                self.$list.append($list.children('li'));
+                return self;
+            },
+            buildSearch: function(self) {
+                if(self.options.withSearch === true) {
+                    self.$triggerDropdown.prepend(self.options.tpl.search.call(self));
+                    self.$search = self.$triggerDropdown.find('.' + self.namespace + '-search');
+                }
+                return self;
+            },
+            select: function(self, obj) {
+                obj.addClass(self.namespace + '-selected');
+                return self;
+            },
+            unselect: function(self, obj) {
+                obj.removeClass(self.namespace + '-selected');
+                return self;
+            },
+            click: function(self) {
+                self.$list.on('click', 'li', function() {
+                    var $this = $(this);
+                    if(!$this.hasClass(self.namespace + '-selected')) {
+                        self.select($this);
+                    }
+                });
+            },
+            filter: function(self, val) {
+                $.expr[':'].Contains = function(a, i, m) {
+                    return jQuery(a).text().toUpperCase()
+                        .indexOf(m[3].toUpperCase()) >= 0;
+                };
+                if(val) {
+                    self.$list.find("li:not(:Contains(" + val + "))").slideUp();
+                    self.$list.find("li:Contains(" + val + ")").slideDown();
+                } else {
+                    self.$list.children('li').slideDown();
+                }
+                return self;
+            },
+            loadMore: function(self, pageMax) {
+                var _pageMax = pageMax || 9999;
+                if(_pageMax > self.page) {
+                    self.$listWrap.on('scroll.selective', function() {
+                        var listHeight = self.$list.outerHeight(),
+                            wrapHeight = self.$listWrap.height(),
+                            wrapScrollTop = self.$listWrap.scrollTop(),
+                            below = listHeight - wrapHeight - wrapScrollTop;
+                        if(below === 0) {
+                            self.options.query(self, self.$search.val(), ++self.page);
+                        }
+                    });
+                }
+                return self;
+            },
+            loadMoreRemove: function(self) {            
+                self.$listWrap.off('scroll.selective');   
+                return  self;
             }
-            
-            if(this.options.withSearch === true){
-               this.$triggerDropdown.prepend(this.options.tpl.search.call(this)); 
-               this.$search = this.$selective.find('.' + this.namespace + '-search');
-               this._search.bind.call(this, this.options.searchType);
+        },
+        _options: {
+            getOptions: function(self) {
+                self.$options = self.$select.find('option');
+                return self.$options;
+            },
+            select: function(self, opt) {
+                opt.prop('selected', true);
+                return self;
+            },
+            unselect: function(self, opt) {
+                opt.prop('selected', false);
+                return self;
+            },
+            add: function(self, data) {
+                if(self.options.buildFromHtml === false 
+                && self.getItem('option', self.$select, self.options.tpl.optionValue(data)) === undefined) {
+                    var $option = $(self.options.tpl.option.call(self, data));
+                    self.setIndex($option, data);
+                    self.$select.append($option);
+                    return $option; 
+                }
+            },
+            remove: function(self, opt) {
+                opt.remove();
+                return self;
             }
+        },
+        _trigger: {
+            show: function(self) {
+                $(document).on('click.selective', function(e) {
+                    if(self.options.closeOnSelect === true) {
+                        if($(e.target).closest(self.$triggerButton).length === 0 
+                        && $(e.target).closest(self.$search).length === 0) {
+                            self._trigger.hide(self);
+                        }
+                    }else{
+                        if ($(e.target).closest(self.$trigger).length === 0) {
+                            self._trigger.hide(self);
+                        } 
+                    }
+                });
 
-            this._list.build.call(this, this.options.data);
+                self.$trigger.addClass(self.namespace + '-active');
+                self.opened = true;
 
-            if(this.options.data === null && this.$select.val() !== null) {
-                $.each(this.$select.val(), function(i, n){
-                    var $item = $(self.getItem(self.$list, n));
-                    self.itemAdd($item.data('selective_index'));
-                    self._list.select.call(self, $item);
-                })
+                if(self.options.ajax.loadMore === true) {
+                    self._list.loadMore(self);
+                }
+                return self;
+            },
+            hide: function(self) {
+                $(document).off('click.selective');
+
+                self.$trigger.removeClass(self.namespace + '-active');
+                self.opened = false;
+
+                if(self.options.ajax.loadMore === true) {
+                    self._list.loadMoreRemove(self);
+                }
+                return self;
+            },
+            click: function(self) {
+                self.$triggerButton.on('click', function() {
+                    if(self.opened === false) {
+                        self.show(self);
+                    }else if(self.opened === true){
+                        self.hide(self);
+                    }
+                });
             }
-
-            this._trigger.click.call(this);
-            this._list.click.call(this);
-            this._items.click.call(this);
         },
         _items: {
-            // build: function(data) {
-            //     var self = this;
-            //     if(data !== null) {
-            //         $.each(data, function(i, n){
-            //             self._items.add.call(self, n, self.options.tpl.optionValue(n));
-            //         });
-            //     }
-            // },
-            add: function(content, data) {
-                if(data === undefined) {
-                   var $item = $(this.options.tpl.item.call(this, content));
-                   this.setIndex($item, content);
-                }else {
-                   var $item = $(this.options.tpl.item.call(this, content)); 
-                   this.setIndex($item, data);
-                } 
-                this.$items.append($item);
-                return this;
+            withDefaults: function(self, data) {
+                if(data !== null) {
+                    $.each(data, function(i, v) {
+                        self._options.add(self, data[i]);
+                        self._options.select(self, self.getItem('option', self.$select, self.options.tpl.optionValue(data[i])));
+                        self._items.add(self, data[i]);
+                    });
+                }
             },
-            remove: function($item) {
-                $item.remove();
-                return this;
+            add: function(self, data, content) {
+                var $item, fill;
+                if(self.options.buildFromHtml === true) {
+                    fill = content;
+                }else{
+                    fill = data;
+                }
+                $item = $(self.options.tpl.item.call(self, fill));
+                self.setIndex($item, data);
+                self.$items.append($item);
+                return $item;
             },
-            click: function() {
-                var self = this;
-                this.$items.on('click', '.' + this.namespace + '-remove', function() {
+            remove: function(self, obj) {
+                var $li, $option;
+                if(self.options.buildFromHtml === true) {
+                    self._list.unselect(self, obj.data('selective_index'));
+                    self._options.unselect(self, obj.data('selective_index').data('selective_index'));
+                }else{
+                    $li = self.getItem('li', self.$list, self.options.tpl.optionValue(obj.data('selective_index')));
+                    if($li !== undefined) {
+                        self._list.unselect(self, $li);
+                    }
+                    var $option = self.getItem('option', self.$select, self.options.tpl.optionValue(obj.data('selective_index')));
+                    self._options.unselect(self, $option)._options.remove(self, $option);
+                }
+
+                obj.remove();
+                return self;
+            },
+            click: function(self) {
+                self.$items.on('click', '.' + self.namespace + '-remove', function() {
                     var $this = $(this),
                         $item = $this.parents('li');
                     self.itemRemove($item);
                 });
             }
         },
-        _trigger: {
-            show: function() {
-                this.$trigger.addClass(this.namespace + '-active');
-                this.opened = true;
-                return this;
-            },
-            hide: function() {
-                this.$trigger.removeClass(this.namespace + '-active');
-                this.opened = false;
-                return this;
-            },
-            click: function() {
-                var self = this;
-                this.$triggerButton.on('click', function() {
-                    if(self.opened === false) {
-                        self.show();
-                    }else if(self.opened === true){
-                        self.hide();
-                    }
-                });
-            }
-        },
-        _list: {
-            build: function(data) {
-                var $list = $(this.options.tpl.list.call(this)),
-                    self = this;
-                if(data === null) {
-                    this.$options = this.$select.find('option');
-                    if(this.$options.length !== 0){                   
-                        $.each(this.$options, function(i, n) {
-                            // self._options.unselect(self.$options.eq(i));
-                            var $listItem = $(self.options.tpl.listItem.call(self, n.text));
-                            $listItem.data('selective_index', n.value);
-                            $list.append($listItem);
-                        });
-                    }
-                } else {
-                    $.each(data, function(i, n) {
-                        var $listItem = $(self.options.tpl.listItem.call(self, data[i]));
-                        self.setIndex($listItem, data[i]);
-                        $list.append($listItem);
-                    });
-                }
-                this.$list.append($list.children());
-            },
-            select: function(obj) {
-                obj.addClass(this.namespace + '-selected');
-                return this;
-            },
-            unselect: function(obj) {
-                obj.removeClass(this.namespace + '-selected');
-                return this;
-            },
-            add: function(content) {
-                this.$list.append(this.options.tpl.listItem.call(this, content));
-                return this;
-            },
-            remove: function($li) {
-                $li.remove();
-                return this;
-            },
-            filter: function(value) {
-                //make contains CompareNoCase
-                jQuery.expr[':'].Contains = function(a, i, m) {
-                    return jQuery(a).text().toUpperCase()
-                        .indexOf(m[3].toUpperCase()) >= 0;
-                };
-
-                if(value) {
-                    this.$list.find("li:not(:Contains(" + value + "))").slideUp();
-                    this.$list.find("li:Contains(" + value + ")").slideDown();
-                } else {
-                    this.$list.children('li').slideDown();
-                }
-            },
-            click: function() {
-                var self = this;
-                this.$list.on('click', 'li', function(){
-                    var $this = $(this);
-
-                    //only select
-                    if(!$this.hasClass(self.namespace + '-selected')){
-                        self.select($this);                      
-                    }
-                });
-            }
-        },
         _search: {
-            bind: function(type) {
-                var self = this,
-                    old_value = '',
-                    current_value = '';
-                if(type === 'change') {
-                    this.$search.change(function(){
-                        self._list.filter.call(self, self.$search.val());
-                    });
-                }else if(type === 'keyup') {
-                    this.$search.keyup(function() {
+            change: function (self) {
+                self.$search.change(function() {
+                    if(self.options.buildFromHtml === true) {
+                        self._list.filter(self, self.$search.val());
+                    }else{
+                        if(self.$search.val() !== '') {
+                            self.page = 1;
+                            self.options.query(self, self.$search.val(), self.page);
+                        }else{
+                            self.update(self.options.local);
+                        }
+                    }
+                })
+            },
+            keyup: function (self) {
+                var quietMills = self.options.ajax.quietMills || 1000,
+                    old_value = '', current_value = '', timeout;
+
+                if(self.options.buildFromHtml === true) {
+                    self.$search.keyup(function() {
                         current_value = self.$search.val();
-                        if (current_value !== old_value) {
-                            self._list.filter.call(self, current_value);
+                        if(current_value !== old_value) {
+                            self._list.filter(self, current_value);
                         }
                         old_value = current_value;
-                    });
-                }else if(type === 'query') {
-                    // this.options.query.call(this, self.$search.val());
-                }            
-            }
-        },
-        _options: {
-            // build: function(data) {
-            //     var self = this;
-            //     if(data !== null) {
-            //         var $html = $('<select multiple="multiple"></select>');
-            //         $.each(data, function(i, n){
-            //             if(self._options.getOption.call(self, self.options.tpl.optionValue(n)) === undefined) {
-            //                 var $item = $(self.options.tpl.option.call(self, n));
-            //                 self.setIndex($item, data[i])._options.select($item);
-            //                 // self._options.select($item);
-            //                 $html.append($item);
-            //             }
-            //         });
-            //         this.$select.append($html.children());
-            //     }
-            // },
-            select: function(opt) {
-                opt.prop('selected', true);
-                return this;
-            },
-            unselect: function(opt) {
-                opt.prop('selected', false);
-                return this;
-            },
-            add: function(data, selected) {
-                if(this._options.getOption.call(this, data) === undefined) {
-                    var $option = $(this.options.tpl.option.call(this, data));
-                    this.setIndex($option, data);
-                    this.$select.append($option); 
+                    });   
+                }else{
+                    self.$search.on('keyup', function(e) {
+                        current_value = self.$search.val();
+                        if(current_value !== old_value || e.keyCode === 13) {
+                            window.clearTimeout(timeout);
+                            timeout = window.setTimeout(function() {
+                                if(current_value !== '') {
+                                    self.page = 1;
+                                    self.options.query(self, current_value, self.page);
+                                }else{
+                                    self.update(self.options.local);
+                                }                              
+                            }, quietMills);
+                        }
+                        old_value = current_value;
+                    }); 
                 }
-                return this;
             },
-            getOption: function(val) {              
-                var $options = this.$select.children('option'),
-                    index = '', self = this;
-                $.each($options, function(i, n) {
-                    if(self.options.data === null){
-                        if(n.value === val) {
-                            index = i;
-                        }
-                    }else {
-                        if($(n).data('selective_index') === val) {
-                            index = i;
-                        }
-                    }
-                    
-                });
-
-                return index === '' ? undefined : $options.eq(index);
+            bind: function(self, type) {
+                if(type === 'change') {              
+                    this.change(self);
+                }else if(type === 'keyup') {
+                    this.keyup(self);
+                }
             }
         },
+        _init: function() {
+            this.$selective = this.$el.next('.' + this.namespace);
+            this.$items = this.$selective.find('.' + this.namespace + '-items');
+            this.$trigger = this.$selective.find('.' + this.namespace + '-trigger');
+            this.$triggerButton = this.$selective.find('.' + this.namespace + '-trigger-button');
+            this.$triggerDropdown = this.$selective.find('.' + this.namespace + '-trigger-dropdown');
+            this.$listWrap = this.$selective.find('.' + this.namespace + '-list-wrap');
+            this.$list = this.$selective.find('.' + this.namespace + '-list');
+            
+            this._items.withDefaults(this, this.options.selected);           
+            this.update(this.options.local)._list.buildSearch(this);
+            
+            this._trigger.click(this);
+            this._list.click(this);
+            this._items.click(this);
 
-
-        setPositon: function(obj, position) {
-            obj.data('selective_position', position);
+            if(this.options.withSearch === true) {
+                this._search.bind(this, this.options.searchType);
+            }
+        },
+        show: function() {
+            this._trigger.show(this);
+            return this;
+        },
+        hide: function() {
+            this._trigger.hide(this);
+            return this;
+        },
+        select: function($li) {
+            this._list.select(this, $li);
+            var data = $li.data('selective_index');
+            if(this.options.buildFromHtml === true) {
+                this._options.select(this, data);
+                this._items.add(this, $li, data.text());
+            }else {
+                this._options.add(this, data);
+                this._options.select(this, this.getItem('option', this.$select, this.options.tpl.optionValue(data)));
+                this._items.add(this, data);
+            }
+            return this;
+        },
+        unselect: function($li) {
+            this._list.unselect(this, $li);
             return this;
         },
         setIndex: function(obj, index) {
             obj.data('selective_index', index);
             return this;
         },
-        getItem: function($list, index) {
-            var $items = $list.children('li');
+        getItem: function(type, $list, index) {
+            var $items = $list.children(type), position = '';
             for(var i = 0; i < $items.length; i++) {
-                if($items.eq(i).data('selective_index') === index) {
-                    return $items.eq(i);
+                if(this.options.tpl.optionValue($items.eq(i).data('selective_index')) === index) {
+                    position = i;
                 }
             }
+            return position ==='' ? undefined : $items.eq(position);
         },
-        show: function() {
-            this._trigger.show.call(this);
-            var self = this;
-            if(this.options.closeOnSelect === true) {
-                $(document).on('click.select', function(ev){
-                    if ($(ev.target).closest(self.$triggerButton).length === 0 && $(ev.target).closest(self.$search).length === 0) {
-                        self._trigger.hide.call(self);
-                    }
-                });
-            }else {
-               $(document).on('click.select', function(ev){
-                    if ($(ev.target).closest(self.$trigger).length === 0) {
-                        self._trigger.hide.call(self);
-                    }
-                }); 
-            }
-            return this;       
-        },
-        hide: function() {
-            this._trigger.hide.call(this);
-            $(document).off('click.select');
+        itemAdd: function(data, content) {
+            this._items.add(this, data, content);
             return this;
         },
-        val: function() {
-            return this.$select.val();
-        },
-        select: function($obj) {
-            this._list.select.call(this, $obj);
-            if(this.options.data === null) {
-                this._items.add.call(this, $obj.text(), $obj.data('selective_index'));
-                this._options.select.call(this, this._options.getOption.call(this, $obj.data('selective_index')));
-            }else{
-                this._options.add.call(this, $obj.data('selective_index'), true);
-                this.itemAdd($obj.data('selective_index')); 
-                this._options.select.call(this, this._options.getOption.call(this, $obj.data('selective_index')));          
-            }
+        itemRemove: function($li) {
+            this._items.remove(this, $li);
             return this;
         },
-        unselect: function($obj) {
-            this._list.unselect.call(this, $obj);
+        optionAdd: function(data) {
+            this._options.add(this, data);
             return this;
         },
-        itemAdd: function(data) {
-            this._items.add.call(this, data);
-            return this;
-        },
-        itemRemove: function($item) {
-            this._list.unselect.call(this, this.getItem(this.$list, $item.data('selective_index')));
-            this._options.unselect.call(this, this._options.getOption.call(this, $item.data('selective_index')));
-            this._items.remove.call(this, $item);
+        optionRemove: function(opt) {
+            this._options.remove(this, opt);
             return this;
         },
         update: function(data) {
             this.$list.empty();
-            this._list.build.call(this, data);
-            return this;
-        },
-        clear: function() {
-            this.$select.empty();
-            this.$list.empty();
-            this.$items.empty();
+            this.page = 1;
+            if(data !== null) {
+                this._list.build(this, data);
+            }else{
+                this._list.build(this);
+            }
             return this;
         }
     };
+
 
   // Collection method.
     $.fn.selective = function(options) {
