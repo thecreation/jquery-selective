@@ -2,7 +2,7 @@
   "name": "jquery-selective",
   "title": "jQuery Selective",
   "description": "A jquery plugin that used to tagging, selectors and so on.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "homepage": "https://github.com/amazingSurge/jquery-selective",
   "author": {
     "name": "amazingSurge",
@@ -24,15 +24,18 @@
     "jquery": ">=1.8.3"
   },
   "devDependencies": {
-    "grunt-contrib-jshint": "~0.2.0",
-    "grunt-contrib-concat": "~0.1.2",
-    "grunt-contrib-uglify": "~0.1.2",
-    "grunt-contrib-watch": "~0.3.1",
-    "grunt-contrib-clean": "~0.4.0",
-    "grunt-jsbeautifier": "~0.1.9",
-    "grunt-text-replace": "~0.3.6",
-    "grunt-contrib-less": "~0.6.4",
-    "grunt": "~0.4.1"
+    "grunt": "*",
+    "grunt-contrib-concat": "*",
+    "grunt-contrib-clean": "*",
+    "grunt-contrib-watch": "*",
+    "grunt-contrib-copy": "*",
+    "load-grunt-tasks": "*",
+    "grunt-jsbeautifier": "*",
+    "grunt-text-replace": "*",
+    "grunt-contrib-jshint": "*",
+    "grunt-contrib-uglify": "*",
+    "grunt-contrib-less": "*",
+    "grunt-autoprefixer": "*"
   },
   "keywords": []
 }
