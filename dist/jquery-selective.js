@@ -1,6 +1,9 @@
-/*! jQuery Selective - v0.1.0 - 2014-09-06
+/*! jQuery Selective - v0.1.0 - 2015-09-30
 * https://github.com/amazingSurge/jquery-selective
-* Copyright (c) 2014 amazingSurge; Licensed GPL */
+* Copyright (c) 2015 amazingSurge; Licensed GPL */
+/*! jQuery Selective - v0.1.0 - 2014-09-06
+ * https://github.com/amazingSurge/jquery-selective
+ * Copyright (c) 2014 amazingSurge; Licensed GPL */
 (function(window, document, $, undefined) {
     "use strict";
     // Constructor
@@ -247,7 +250,7 @@
                 }
             },
             add: function(self, data, content) {
-                self._trigger("beforeItemAdd");
+                // self._trigger("beforeItemAdd");
                 var $item, fill;
                 if (self.options.buildFromHtml === true) {
                     fill = content;
@@ -257,8 +260,8 @@
                 $item = $(self.options.tpl.item.call(self, fill));
                 self.setIndex($item, data);
                 self.$items.append($item);
-                self._trigger("afterItemAdd");
-                return $item;
+                // self._trigger("afterItemAdd");
+                // return $item;
             },
             remove: function(self, obj) {
                 var $li, $option;
@@ -436,11 +439,12 @@
             var data = $li.data('selective_index');
             if (this.options.buildFromHtml === true) {
                 this._options.select(this, data);
-                this._items.add(this, $li, data.text());
+                this.itemAdd($li, data.text());
             } else {
                 this._options.add(this, data);
                 this._options.select(this, this.getItem('option', this.$select, this.options.tpl.optionValue(data)));
-                this._items.add(this, data);
+                this.itemAdd(data);
+
             }
             return this;
         },
@@ -463,7 +467,9 @@
             return position === '' ? undefined : $items.eq(position);
         },
         itemAdd: function(data, content) {
+            // this._trigger("beforeItemAdd");
             this._items.add(this, data, content);
+            // this._trigger("afterItemAdd");
             return this;
         },
         itemRemove: function($li) {
