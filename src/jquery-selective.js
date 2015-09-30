@@ -464,9 +464,9 @@
             return position === '' ? undefined : $items.eq(position);
         },
         itemAdd: function(data, content) {
-            // this._trigger("beforeItemAdd");
+            this._trigger("beforeItemAdd");
             this._items.add(this, data, content);
-            // this._trigger("afterItemAdd");
+            this._trigger("afterItemAdd");
             return this;
         },
         itemRemove: function($li) {
