@@ -11,7 +11,7 @@ const NAMESPACE = 'selective';
  * Plugin constructor
  **/
 class Selective {
-  constructor(element, options) {
+  constructor(element, options = {}) {
     this.element = element;
     this.$element = $(element).css({
       display: 'none'
@@ -226,7 +226,7 @@ class Selective {
   }
 
   static setDefaults(options) {
-    $.extend(DEFAULTS, $.isPlainObject(options) && options);
+    $.extend(true, DEFAULTS, $.isPlainObject(options) && options);
   }
 }
 

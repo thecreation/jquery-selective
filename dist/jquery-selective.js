@@ -1,5 +1,5 @@
 /**
-* jQuery Selective v0.3.0
+* jQuery Selective v0.3.1
 * https://github.com/amazingSurge/jquery-selective
 *
 * Copyright (c) amazingSurge
@@ -531,8 +531,10 @@
      **/
 
     var Selective = function() {
-      function Selective(element, options) {
+      function Selective(element) {
         var _this6 = this;
+
+        var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
         _classCallCheck(this, Selective);
 
@@ -801,7 +803,7 @@
       }], [{
         key: 'setDefaults',
         value: function setDefaults(options) {
-          _jquery2.default.extend(DEFAULTS, _jquery2.default.isPlainObject(options) && options);
+          _jquery2.default.extend(true, DEFAULTS, _jquery2.default.isPlainObject(options) && options);
         }
       }]);
 
@@ -809,7 +811,7 @@
     }();
 
     var info = {
-      version: '0.3.0'
+      version: '0.3.1'
     };
 
     var NAMESPACE = 'selective';

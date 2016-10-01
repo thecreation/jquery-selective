@@ -1,5 +1,5 @@
 /**
-* jQuery Selective v0.3.0
+* jQuery Selective v0.3.1
 * https://github.com/amazingSurge/jquery-selective
 *
 * Copyright (c) amazingSurge
@@ -349,7 +349,7 @@ const NAMESPACE$1 = 'selective';
  * Plugin constructor
  **/
 class Selective {
-  constructor(element, options) {
+  constructor(element, options = {}) {
     this.element = element;
     this.$element = $$1(element).css({
       display: 'none'
@@ -564,12 +564,12 @@ class Selective {
   }
 
   static setDefaults(options) {
-    $$1.extend(DEFAULTS, $$1.isPlainObject(options) && options);
+    $$1.extend(true, DEFAULTS, $$1.isPlainObject(options) && options);
   }
 }
 
 var info = {
-  version:'0.3.0'
+  version:'0.3.1'
 };
 
 const NAMESPACE = 'selective';

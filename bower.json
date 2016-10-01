@@ -1,6 +1,6 @@
 {
   "name": "jquery-selective",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "A jquery plugin that do amazing things.",
   "main": "dist/jquery-selective.js",
   "copyright": "amazingSurge",
