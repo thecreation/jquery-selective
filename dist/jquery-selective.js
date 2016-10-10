@@ -1,5 +1,5 @@
 /**
-* jQuery Selective v0.3.1
+* jQuery Selective v0.3.2
 * https://github.com/amazingSurge/jquery-selective
 *
 * Copyright (c) amazingSurge
@@ -38,7 +38,7 @@
       :
 
       function(obj) {
-        return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj;
+        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
       };
 
     function _classCallCheck(instance, Constructor) {
@@ -458,7 +458,7 @@
               function(i) {
                 _this5.instance._options.add(_this5.instance, data[i]);
                 _this5.instance._options.select(_this5.instance, _this5.instance.getItem('option', _this5.instance.$select, _this5.instance.options.tpl.optionValue(data[i])));
-                _this5.instance._items.add(_this5.instance, data[i]);
+                _this5.instance._items.add(data[i]);
               }
             );
           }
@@ -534,7 +534,7 @@
       function Selective(element) {
         var _this6 = this;
 
-        var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
         _classCallCheck(this, Selective);
 
@@ -811,7 +811,7 @@
     }();
 
     var info = {
-      version: '0.3.1'
+      version: '0.3.2'
     };
 
     var NAMESPACE = 'selective';

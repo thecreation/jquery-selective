@@ -8,7 +8,7 @@ class Items {
       $.each(data, i => {
         this.instance._options.add(this.instance, data[i]);
         this.instance._options.select(this.instance, this.instance.getItem('option', this.instance.$select, this.instance.options.tpl.optionValue(data[i])));
-        this.instance._items.add(this.instance, data[i]);
+        this.instance._items.add(data[i]);
       });
     }
   }

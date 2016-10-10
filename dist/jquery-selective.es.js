@@ -1,5 +1,5 @@
 /**
-* jQuery Selective v0.3.1
+* jQuery Selective v0.3.2
 * https://github.com/amazingSurge/jquery-selective
 *
 * Copyright (c) amazingSurge
@@ -291,7 +291,7 @@ class Items {
       $.each(data, i => {
         this.instance._options.add(this.instance, data[i]);
         this.instance._options.select(this.instance, this.instance.getItem('option', this.instance.$select, this.instance.options.tpl.optionValue(data[i])));
-        this.instance._items.add(this.instance, data[i]);
+        this.instance._items.add(data[i]);
       });
     }
   }
@@ -569,7 +569,7 @@ class Selective {
 }
 
 var info = {
-  version:'0.3.1'
+  version:'0.3.2'
 };
 
 const NAMESPACE = 'selective';
