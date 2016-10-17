@@ -28,9 +28,8 @@ export default {
     optionValue: function(data) {
       if('name' in data) {
         return data.name;
-      } else {
-        return data;
       }
+      return data;
     },
     option: function(content) {
       return `<option value="${this.options.tpl.optionValue.call(this)}">${content}</option>`;

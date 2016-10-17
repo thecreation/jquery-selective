@@ -1,5 +1,5 @@
 /**
-* jQuery Selective v0.3.2
+* jQuery Selective v0.3.3
 * https://github.com/amazingSurge/jquery-selective
 *
 * Copyright (c) amazingSurge
@@ -37,9 +37,8 @@ var DEFAULTS = {
     optionValue: function(data) {
       if('name' in data) {
         return data.name;
-      } else {
-        return data;
       }
+      return data;
     },
     option: function(content) {
       return `<option value="${this.options.tpl.optionValue.call(this)}">${content}</option>`;
@@ -411,7 +410,7 @@ class Selective {
   }
 
   _trigger(eventType, ...params) {
-    let data = [this].concat(...params);
+    let data = [this].concat(params);
 
     // event
     this.$element.trigger(`${NAMESPACE$1}::${eventType}`, data);
@@ -423,7 +422,7 @@ class Selective {
     let onFunction = `on${eventType}`;
 
     if (typeof this.options[onFunction] === 'function') {
-      this.options[onFunction].apply(this, ...params);
+      this.options[onFunction].apply(this, params);
     }
   }
 
@@ -551,7 +550,7 @@ class Selective {
     return this;
   }
 
-  destory() {
+  destroy() {
     this.$handle.removeClass(this.classes.handleClass);
     this.$bar.removeClass(this.classes.barClass).removeClass(this.classes.directionClass).attr('draggable', null);
     if (this.options.skin) {
@@ -560,7 +559,7 @@ class Selective {
     this.$bar.off(this.eventName());
     this.$handle.off(this.eventName());
 
-    this.trigger('destory');
+    this.trigger('destroy');
   }
 
   static setDefaults(options) {
@@ -569,7 +568,7 @@ class Selective {
 }
 
 var info = {
-  version:'0.3.2'
+  version:'0.3.3'
 };
 
 const NAMESPACE = 'selective';

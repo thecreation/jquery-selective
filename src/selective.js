@@ -73,7 +73,7 @@ class Selective {
   }
 
   _trigger(eventType, ...params) {
-    let data = [this].concat(...params);
+    let data = [this].concat(params);
 
     // event
     this.$element.trigger(`${NAMESPACE}::${eventType}`, data);
@@ -85,7 +85,7 @@ class Selective {
     let onFunction = `on${eventType}`;
 
     if (typeof this.options[onFunction] === 'function') {
-      this.options[onFunction].apply(this, ...params);
+      this.options[onFunction].apply(this, params);
     }
   }
 
@@ -213,7 +213,7 @@ class Selective {
     return this;
   }
 
-  destory() {
+  destroy() {
     this.$handle.removeClass(this.classes.handleClass);
     this.$bar.removeClass(this.classes.barClass).removeClass(this.classes.directionClass).attr('draggable', null);
     if (this.options.skin) {
@@ -222,7 +222,7 @@ class Selective {
     this.$bar.off(this.eventName());
     this.$handle.off(this.eventName());
 
-    this.trigger('destory');
+    this.trigger('destroy');
   }
 
   static setDefaults(options) {
