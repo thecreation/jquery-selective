@@ -47,6 +47,7 @@
 }
 
 .car-list {
+  padding-left: 0;
   margin-left: 0;
   list-style: none;
   border: 1px solid gray;
@@ -91,6 +92,7 @@
 
 .car-items {
   display: inline-block; 
+  padding-left: 0;
   margin-left: 0;
   list-style: none;
 }
@@ -133,7 +135,8 @@
 }
 
 .addMember-list {
-  margin-left: 0; 
+  padding-left: 0; 
+  margin-left: 0;
   list-style: none;
 }
 
@@ -175,6 +178,7 @@
 
 .addMember-items {
   display: inline-block; 
+  padding-left: 0;
   margin-left: 0;
   list-style: none;
 }

@@ -5,7 +5,7 @@ class List {
 
   build(data) {
     const $list = $('<ul></ul>');
-    const $options = this.instance._options.getOptions(this.instance);
+    const $options = this.instance._options.getOptions();
     if (this.instance.options.buildFromHtml === true) {
       if ($options.length !== 0) {
         $.each($options, (i, n) => {
@@ -28,8 +28,9 @@ class List {
         $.each($options, (i, n) => {
           const $n = $(n);
           const li = this.instance.getItem('li', $list, this.instance.options.tpl.optionValue($n.data('selective_index')));
+
           if (li !== undefined) {
-            this.instance._list.select(this.instance, li);
+            this.instance._list.select(li);
           }
         });
       }

@@ -14,6 +14,7 @@
 <body style="padding: 100px;">
 
 <p>namespace: 'car';</p>
+<button id="example-destroy">destroy</button>
 <select id="example" multiple="multiple">
   <option value="BMW">BMW</option>
   <option value="Peugeot">Peugeot</option>
@@ -231,24 +232,28 @@ jQuery(function($) {
       img: 'images/img-user.png'
     },
     {
-      id: 'uid_16',
-      name: 'uid_16',
+      id: 'uid_8',
+      name: 'uid_8',
       img: 'images/img-user.png'
     },
     {
-      id: 'uid_17',
-      name: 'uid_17',
+      id: 'uid_10',
+      name: 'uid_10',
       img: 'images/img-user.png'
     },
     {
-      id: 'uid_18',
-      name: 'uid_18',
+      id: 'uid_15',
+      name: 'uid_15',
       img: 'images/img-user.png'
     },
   ];
 
   $('#example').selective({
     namespace: 'car',
+  });
+
+  $("#example-destroy").on('click', function() {
+    $('#example8').selective('destroy');
   });
 
   $('#example2').selective({

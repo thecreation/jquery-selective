@@ -104,6 +104,7 @@ class Options {
     if (this.instance.options.buildFromHtml === false &&
       this.instance.getItem('option', this.instance.$select, this.instance.options.tpl.optionValue(data)) === undefined) {
       const $option = $(this.instance.options.tpl.option.call(this.instance, data));
+
       this.instance.setIndex($option, data);
       this.instance.$select.append($option);
       return $option;
@@ -123,7 +124,7 @@ class List {
 
   build(data) {
     const $list = $('<ul></ul>');
-    const $options = this.instance._options.getOptions(this.instance);
+    const $options = this.instance._options.getOptions();
     if (this.instance.options.buildFromHtml === true) {
       if ($options.length !== 0) {
         $.each($options, (i, n) => {
@@ -146,8 +147,9 @@ class List {
         $.each($options, (i, n) => {
           const $n = $(n);
           const li = this.instance.getItem('li', $list, this.instance.options.tpl.optionValue($n.data('selective_index')));
+
           if (li !== undefined) {
-            this.instance._list.select(this.instance, li);
+            this.instance._list.select(li);
           }
         });
       }
@@ -231,10 +233,10 @@ class Search {
     this.instance.$search.change(() => {
       this.instance._trigger("beforeSearch");
       if (this.instance.options.buildFromHtml === true) {
-        this.instance._list.filter(self, this.instance.$search.val());
+        this.instance._list.filter(this.instance.$search.val());
       } else if (this.instance.$search.val() !== '') {
         this.instance.page = 1;
-        this.instance.options.query(self, this.instance.$search.val(), this.instance.page);
+        this.instance.options.query(this.instance.$search.val(), this.instance.page);
       } else {
         this.instance.update(this.instance.options.local);
       }
@@ -253,14 +255,14 @@ class Search {
       currentValue = this.instance.$search.val();
       if (this.instance.options.buildFromHtml === true) {
         if (currentValue !== oldValue) {
-          this.instance._list.filter(this.instance, currentValue);
+          this.instance._list.filter(currentValue);
         }
       } else if (currentValue !== oldValue || e.keyCode === 13) {
         window.clearTimeout(timeout);
         timeout = window.setTimeout(() => {
           if (currentValue !== '') {
             this.instance.page = 1;
-            this.instance.options.query(self, currentValue, this.instance.page);
+            this.instance.options.query(this.instance, currentValue, this.instance.page);
           } else {
             this.instance.update(this.instance.options.local);
           }
@@ -271,11 +273,11 @@ class Search {
     });
   }
 
-  bind(self, type) {
+  bind(type) {
     if (type === 'change') {
-      this.change(self);
+      this.change();
     } else if (type === 'keyup') {
-      this.keyup(self);
+      this.keyup();
     }
   }
 }
@@ -288,15 +290,14 @@ class Items {
   withDefaults(data) {
     if (data !== null) {
       $.each(data, i => {
-        this.instance._options.add(this.instance, data[i]);
-        this.instance._options.select(this.instance, this.instance.getItem('option', this.instance.$select, this.instance.options.tpl.optionValue(data[i])));
+        this.instance._options.add(data[i]);
+        this.instance._options.select(this.instance.getItem('option', this.instance.$select, this.instance.options.tpl.optionValue(data[i])));
         this.instance._items.add(data[i]);
       });
     }
   }
 
   add(data, content) {
-    // this.instance._trigger("beforeItemAdd");
     let $item;
 
     let fill;
@@ -308,8 +309,6 @@ class Items {
     $item = $(this.instance.options.tpl.item.call(this.instance, fill));
     this.instance.setIndex($item, data);
     this.instance.$items.append($item);
-    // this.instance._trigger("afterItemAdd");
-    // return $item;
   }
 
   remove(obj) {
@@ -317,15 +316,15 @@ class Items {
     let $li;
     let $option;
     if (this.instance.options.buildFromHtml === true) {
-      this.instance._list.unselect(this.instance, obj.data('selective_index'));
-      this.instance._options.unselect(this.instance, obj.data('selective_index').data('selective_index'));
+      this.instance._list.unselect(obj.data('selective_index'));
+      this.instance._options.unselect(obj.data('selective_index').data('selective_index'));
     } else {
       $li = this.instance.getItem('li', this.instance.$list, this.instance.options.tpl.optionValue(obj.data('selective_index')));
       if ($li !== undefined) {
-        this.instance._list.unselect(this.instance, $li);
+        this.instance._list.unselect($li);
       }
       $option = this.instance.getItem('option', this.instance.$select, this.instance.options.tpl.optionValue(obj.data('selective_index')));
-      this.instance._options.unselect(this.instance, $option)._options.remove(this.instance, $option);
+      this.instance._options.unselect($option)._options.remove($option);
     }
 
     obj.remove();
@@ -350,9 +349,7 @@ const NAMESPACE$1 = 'selective';
 class Selective {
   constructor(element, options = {}) {
     this.element = element;
-    this.$element = $$1(element).css({
-      display: 'none'
-    }) || $$1('<select></select>');
+    this.$element = $$1(element).hide() || $$1('<select></select>');
 
     this.options = $$1.extend(true, {}, DEFAULTS, options);
 
@@ -551,15 +548,11 @@ class Selective {
   }
 
   destroy() {
-    this.$handle.removeClass(this.classes.handleClass);
-    this.$bar.removeClass(this.classes.barClass).removeClass(this.classes.directionClass).attr('draggable', null);
-    if (this.options.skin) {
-      this.$bar.removeClass(this.options.skin);
-    }
-    this.$bar.off(this.eventName());
-    this.$handle.off(this.eventName());
+    this.$selective.remove();
+    this.$element.show();
+    $$1(document).off('click.selective');
 
-    this.trigger('destroy');
+    this._trigger('destroy');
   }
 
   static setDefaults(options) {

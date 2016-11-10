@@ -23,6 +23,7 @@ class Options {
     if (this.instance.options.buildFromHtml === false &&
       this.instance.getItem('option', this.instance.$select, this.instance.options.tpl.optionValue(data)) === undefined) {
       const $option = $(this.instance.options.tpl.option.call(this.instance, data));
+
       this.instance.setIndex($option, data);
       this.instance.$select.append($option);
       return $option;

@@ -44,6 +44,7 @@ $namespace2: addMember;
 .#{$namespace}-list {
   list-style: none;
   margin-left: 0;
+  padding-left: 0;
   border: 1px solid gray;
 }
 
@@ -87,6 +88,7 @@ $namespace2: addMember;
 .#{$namespace}-items {
   list-style: none;
   margin-left: 0;
+  padding-left: 0;
   display: inline-block;
 }
 
@@ -130,6 +132,7 @@ $namespace2: addMember;
 .#{$namespace2}-list {
   list-style: none;
   margin-left: 0;
+  padding-left: 0;
   // max-height: 300px;
   // overflow: auto;
 }
@@ -175,6 +178,7 @@ $namespace2: addMember;
 .#{$namespace2}-items {
   list-style: none;
   margin-left: 0;
+  padding-left: 0;
   display: inline-block;
 }
 

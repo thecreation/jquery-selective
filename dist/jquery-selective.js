@@ -5,7 +5,9 @@
 * Copyright (c) amazingSurge
 * Released under the LGPL-3.0 license
 */
-(function(global, factory) {
+(
+
+  function(global, factory) {
   if (typeof define === "function" && define.amd) {
     define(['jquery'], factory);
   } else if (typeof exports !== "undefined") {
@@ -17,7 +19,8 @@
     factory(global.jQuery);
     global.jquerySelectiveEs = mod.exports;
   }
-})(this,
+}
+)(this,
 
   function(_jquery) {
     'use strict';
@@ -38,7 +41,7 @@
       :
 
       function(obj) {
-        return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj;
+        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
       };
 
     function _classCallCheck(instance, Constructor) {
@@ -180,6 +183,7 @@
 
           if (this.instance.options.buildFromHtml === false && this.instance.getItem('option', this.instance.$select, this.instance.options.tpl.optionValue(data)) === undefined) {
             var $option = $(this.instance.options.tpl.option.call(this.instance, data));
+
             this.instance.setIndex($option, data);
             this.instance.$select.append($option);
 
@@ -211,7 +215,7 @@
           var _this = this;
 
           var $list = $('<ul></ul>');
-          var $options = this.instance._options.getOptions(this.instance);
+          var $options = this.instance._options.getOptions();
 
           if (this.instance.options.buildFromHtml === true) {
 
@@ -248,7 +252,7 @@
                   var li = _this.instance.getItem('li', $list, _this.instance.options.tpl.optionValue($n.data('selective_index')));
 
                   if (li !== undefined) {
-                    _this.instance._list.select(_this.instance, li);
+                    _this.instance._list.select(li);
                   }
                 }
               );
@@ -374,10 +378,10 @@
               _this3.instance._trigger("beforeSearch");
 
               if (_this3.instance.options.buildFromHtml === true) {
-                _this3.instance._list.filter(self, _this3.instance.$search.val());
+                _this3.instance._list.filter(_this3.instance.$search.val());
               } else if (_this3.instance.$search.val() !== '') {
                 _this3.instance.page = 1;
-                _this3.instance.options.query(self, _this3.instance.$search.val(), _this3.instance.page);
+                _this3.instance.options.query(_this3.instance.$search.val(), _this3.instance.page);
               } else {
                 _this3.instance.update(_this3.instance.options.local);
               }
@@ -404,7 +408,7 @@
               if (_this4.instance.options.buildFromHtml === true) {
 
                 if (currentValue !== oldValue) {
-                  _this4.instance._list.filter(_this4.instance, currentValue);
+                  _this4.instance._list.filter(currentValue);
                 }
               } else if (currentValue !== oldValue || e.keyCode === 13) {
                 window.clearTimeout(timeout);
@@ -413,7 +417,7 @@
                   function() {
                     if (currentValue !== '') {
                       _this4.instance.page = 1;
-                      _this4.instance.options.query(self, currentValue, _this4.instance.page);
+                      _this4.instance.options.query(_this4.instance, currentValue, _this4.instance.page);
                     } else {
                       _this4.instance.update(_this4.instance.options.local);
                     }
@@ -427,11 +431,11 @@
         }
       }, {
         key: 'bind',
-        value: function bind(self, type) {
+        value: function bind(type) {
           if (type === 'change') {
-            this.change(self);
+            this.change();
           } else if (type === 'keyup') {
-            this.keyup(self);
+            this.keyup();
           }
         }
       }]);
@@ -455,8 +459,8 @@
             $.each(data,
 
               function(i) {
-                _this5.instance._options.add(_this5.instance, data[i]);
-                _this5.instance._options.select(_this5.instance, _this5.instance.getItem('option', _this5.instance.$select, _this5.instance.options.tpl.optionValue(data[i])));
+                _this5.instance._options.add(data[i]);
+                _this5.instance._options.select(_this5.instance.getItem('option', _this5.instance.$select, _this5.instance.options.tpl.optionValue(data[i])));
                 _this5.instance._items.add(data[i]);
               }
             );
@@ -465,7 +469,6 @@
       }, {
         key: 'add',
         value: function add(data, content) {
-          // this.instance._trigger("beforeItemAdd");
           var $item = void 0;
 
           var fill = void 0;
@@ -478,8 +481,6 @@
           $item = $(this.instance.options.tpl.item.call(this.instance, fill));
           this.instance.setIndex($item, data);
           this.instance.$items.append($item);
-        // this.instance._trigger("afterItemAdd");
-        // return $item;
         }
       }, {
         key: 'remove',
@@ -489,16 +490,16 @@
           var $option = void 0;
 
           if (this.instance.options.buildFromHtml === true) {
-            this.instance._list.unselect(this.instance, obj.data('selective_index'));
-            this.instance._options.unselect(this.instance, obj.data('selective_index').data('selective_index'));
+            this.instance._list.unselect(obj.data('selective_index'));
+            this.instance._options.unselect(obj.data('selective_index').data('selective_index'));
           } else {
             $li = this.instance.getItem('li', this.instance.$list, this.instance.options.tpl.optionValue(obj.data('selective_index')));
 
             if ($li !== undefined) {
-              this.instance._list.unselect(this.instance, $li);
+              this.instance._list.unselect($li);
             }
             $option = this.instance.getItem('option', this.instance.$select, this.instance.options.tpl.optionValue(obj.data('selective_index')));
-            this.instance._options.unselect(this.instance, $option)._options.remove(this.instance, $option);
+            this.instance._options.unselect($option)._options.remove($option);
           }
 
           obj.remove();
@@ -533,14 +534,12 @@
       function Selective(element) {
         var _this6 = this;
 
-        var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+        var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
         _classCallCheck(this, Selective);
 
         this.element = element;
-        this.$element = (0, _jquery2.default)(element).css({
-          display: 'none'
-        }) || (0, _jquery2.default)('<select></select>');
+        this.$element = (0, _jquery2.default)(element).hide() || (0, _jquery2.default)('<select></select>');
 
         this.options = _jquery2.default.extend(true, {}, DEFAULTS, options);
 
@@ -784,16 +783,11 @@
       }, {
         key: 'destroy',
         value: function destroy() {
-          this.$handle.removeClass(this.classes.handleClass);
-          this.$bar.removeClass(this.classes.barClass).removeClass(this.classes.directionClass).attr('draggable', null);
+          this.$selective.remove();
+          this.$element.show();
+          (0, _jquery2.default)(document).off('click.selective');
 
-          if (this.options.skin) {
-            this.$bar.removeClass(this.options.skin);
-          }
-          this.$bar.off(this.eventName());
-          this.$handle.off(this.eventName());
-
-          this.trigger('destroy');
+          this._trigger('destroy');
         }
       }], [{
         key: 'setDefaults',

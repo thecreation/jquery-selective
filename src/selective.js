@@ -13,9 +13,7 @@ const NAMESPACE = 'selective';
 class Selective {
   constructor(element, options = {}) {
     this.element = element;
-    this.$element = $(element).css({
-      display: 'none'
-    }) || $('<select></select>');
+    this.$element = $(element).hide() || $('<select></select>');
 
     this.options = $.extend(true, {}, DEFAULTS, options);
 
@@ -214,15 +212,11 @@ class Selective {
   }
 
   destroy() {
-    this.$handle.removeClass(this.classes.handleClass);
-    this.$bar.removeClass(this.classes.barClass).removeClass(this.classes.directionClass).attr('draggable', null);
-    if (this.options.skin) {
-      this.$bar.removeClass(this.options.skin);
-    }
-    this.$bar.off(this.eventName());
-    this.$handle.off(this.eventName());
+    this.$selective.remove();
+    this.$element.show();
+    $(document).off('click.selective');
 
-    this.trigger('destroy');
+    this._trigger('destroy');
   }
 
   static setDefaults(options) {

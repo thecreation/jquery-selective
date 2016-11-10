@@ -7,10 +7,10 @@ class Search {
     this.instance.$search.change(() => {
       this.instance._trigger("beforeSearch");
       if (this.instance.options.buildFromHtml === true) {
-        this.instance._list.filter(self, this.instance.$search.val());
+        this.instance._list.filter(this.instance.$search.val());
       } else if (this.instance.$search.val() !== '') {
         this.instance.page = 1;
-        this.instance.options.query(self, this.instance.$search.val(), this.instance.page);
+        this.instance.options.query(this.instance.$search.val(), this.instance.page);
       } else {
         this.instance.update(this.instance.options.local);
       }
@@ -29,14 +29,14 @@ class Search {
       currentValue = this.instance.$search.val();
       if (this.instance.options.buildFromHtml === true) {
         if (currentValue !== oldValue) {
-          this.instance._list.filter(this.instance, currentValue);
+          this.instance._list.filter(currentValue);
         }
       } else if (currentValue !== oldValue || e.keyCode === 13) {
         window.clearTimeout(timeout);
         timeout = window.setTimeout(() => {
           if (currentValue !== '') {
             this.instance.page = 1;
-            this.instance.options.query(self, currentValue, this.instance.page);
+            this.instance.options.query(this.instance, currentValue, this.instance.page);
           } else {
             this.instance.update(this.instance.options.local);
           }
@@ -47,11 +47,11 @@ class Search {
     });
   }
 
-  bind(self, type) {
+  bind(type) {
     if (type === 'change') {
-      this.change(self);
+      this.change();
     } else if (type === 'keyup') {
-      this.keyup(self);
+      this.keyup();
     }
   }
 }
