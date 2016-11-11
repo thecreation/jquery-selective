@@ -239,6 +239,7 @@
 
               function(i) {
                 var $li = $(_this.instance.options.tpl.listItem.call(_this.instance, data[i]));
+
                 _this.instance.setIndex($li, data[i]);
                 $list.append($li);
               }
@@ -325,17 +326,17 @@
         }
       }, {
         key: 'loadMore',
-        value: function loadMore(pageMax) {
+        value: function loadMore() {
           var _this2 = this;
 
-          var _pageMax = pageMax || 9999;
+          var pageMax = this.instance.options.ajax.pageSize || 9999;
 
-          if (_pageMax > this.instance.page) {
-            this.instance.$listWrap.on('scroll.selective',
+          this.instance.$listWrap.on('scroll.selective',
 
-              function() {
-                var listHeight = _this2.instance.$list.outerHeight();
-                var wrapHeight = _this2.instance.$listWrap.height();
+            function() {
+              if (pageMax > _this2.instance.page) {
+                var listHeight = _this2.instance.$list.outerHeight(true);
+                var wrapHeight = _this2.instance.$listWrap.outerHeight();
                 var wrapScrollTop = _this2.instance.$listWrap.scrollTop();
                 var below = listHeight - wrapHeight - wrapScrollTop;
 
@@ -343,8 +344,8 @@
                   _this2.instance.options.query(_this2.instance, _this2.instance.$search.val(), ++_this2.instance.page);
                 }
               }
-            );
-          }
+            }
+          );
 
           return this.instance;
         }

@@ -21,9 +21,11 @@ class List {
     } else if (data !== null) {
       $.each(data, i => {
         const $li = $(this.instance.options.tpl.listItem.call(this.instance, data[i]));
+
         this.instance.setIndex($li, data[i]);
         $list.append($li);
       });
+
       if ($options.length !== 0) {
         $.each($options, (i, n) => {
           const $n = $(n);
@@ -33,7 +35,7 @@ class List {
             this.instance._list.select(li);
           }
         });
-      }
+      }   
     }
 
     this.instance.$list.append($list.children('li'));
@@ -83,19 +85,20 @@ class List {
     return this.instance;
   }
 
-  loadMore(pageMax) {
-    const _pageMax = pageMax || 9999;
-    if (_pageMax > this.instance.page) {
-      this.instance.$listWrap.on('scroll.selective', () => {
-        const listHeight = this.instance.$list.outerHeight();
-        const wrapHeight = this.instance.$listWrap.height();
+  loadMore() {
+    const pageMax = this.instance.options.ajax.pageSize || 9999;
+       
+    this.instance.$listWrap.on('scroll.selective', () => {
+      if (pageMax > this.instance.page) {
+        const listHeight = this.instance.$list.outerHeight(true);
+        const wrapHeight = this.instance.$listWrap.outerHeight();
         const wrapScrollTop = this.instance.$listWrap.scrollTop();
         const below = listHeight - wrapHeight - wrapScrollTop;
         if (below === 0) {
           this.instance.options.query(this.instance, this.instance.$search.val(), ++this.instance.page);
         }
-      });
-    }
+      }
+    });
     return this.instance;
   }
 
