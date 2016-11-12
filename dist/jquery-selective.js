@@ -1,5 +1,5 @@
 /**
-* jQuery Selective v0.3.3
+* jQuery Selective v0.3.4
 * https://github.com/amazingSurge/jquery-selective
 *
 * Copyright (c) amazingSurge
@@ -381,7 +381,8 @@
                 _this3.instance._list.filter(_this3.instance.$search.val());
               } else if (_this3.instance.$search.val() !== '') {
                 _this3.instance.page = 1;
-                _this3.instance.options.query(_this3.instance.$search.val(), _this3.instance.page);
+
+                _this3.instance.options.query(_this3.instance, _this3.instance.$search.val(), _this3.instance.page);
               } else {
                 _this3.instance.update(_this3.instance.options.local);
               }
@@ -800,7 +801,7 @@
     }();
 
     var info = {
-      version: '0.3.3'
+      version: '0.3.4'
     };
 
     var NAMESPACE = 'selective';
