@@ -1,5 +1,5 @@
 /**
-* jQuery Selective v0.3.4
+* jQuery Selective v0.3.5
 * https://github.com/amazingSurge/jquery-selective
 *
 * Copyright (c) amazingSurge
@@ -565,7 +565,7 @@ class Selective {
 }
 
 var info = {
-  version:'0.3.4'
+  version:'0.3.5'
 };
 
 const NAMESPACE = 'selective';
